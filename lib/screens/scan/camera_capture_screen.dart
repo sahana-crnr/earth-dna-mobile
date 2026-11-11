@@ -150,7 +150,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       isScrollControlled: true,
       builder: (ctx) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -164,31 +164,31 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                   child: Container(
                     width: 44,
                     height: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD1D5DB),
+                      color: const Color(0xFF1E242B),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
-                // Checkmark in dark gray circle (Page 25)
+                // Checkmark in Lime green circle (Figma confirm modal)
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 64,
+                  height: 64,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF475569),
+                    color: AppColors.buttonLime, // Action/Primary/BG/default #B5E076
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
-                    child: Icon(Icons.check, size: 30, color: Colors.white),
+                    child: Icon(Icons.check, size: 34, color: Color(0xFF0F172A)),
                   ),
                 ),
                 const SizedBox(height: 14),
                 Text(
                   'Shoe 0$shoeNumber Is Complete',
                   style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
                     color: Color(0xFF0F172A),
                     letterSpacing: -0.3,
                   ),
@@ -205,10 +205,10 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // 2x2 Photo Review Grid (Page 25)
+                // 2x2 Photo Review Grid (Figma confirm modal)
                 SizedBox(
-                  width: 220,
-                  height: 220,
+                  width: 240,
+                  height: 240,
                   child: GridView.count(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
@@ -256,7 +256,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
                             return Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: const Color(0xFFE2E8F0),
                                 ),
@@ -272,14 +272,14 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Finish Scanning Button (Page 25 - Dark gray pill)
+                // Finish Scanning Button (Figma Lime green pill)
                 SizedBox(
                   width: double.infinity,
-                  height: 52,
+                  height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5A5A5A),
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.buttonLime,
+                      foregroundColor: const Color(0xFF0F172A),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(26),
@@ -299,7 +299,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                     child: const Text(
                       'Finish Scanning',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -307,14 +307,16 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                // Scan Another Shoe Button (Page 25 - Outlined pill)
+                // Scan Another Shoe Button (Figma Outlined pill)
                 SizedBox(
                   width: double.infinity,
-                  height: 52,
+                  height: 50,
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
                       foregroundColor: const Color(0xFF0F172A),
                       side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(26),
                       ),
@@ -326,7 +328,116 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                     child: const Text(
                       'Scan another shoe',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showExitConfirmationModal() {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E242B),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const Text(
+                  "You're Almost Done!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0F172A),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Your photos are saved automatically, so\nyou can exit now and finish anytime.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF64748B),
+                    fontSize: 14,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Continue Scanning Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.buttonLime,
+                      foregroundColor: const Color(0xFF0F172A),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: const Text(
+                      'Continue Scanning',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Save & Exit Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF0F172A),
+                      side: const BorderSide(color: Color(0xFFCBD5E1)),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'Save & Exit',
+                      style: TextStyle(
+                        fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -784,22 +895,28 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
     final capturedCount = scan.getCapturedCount(scan.activeShoeIndex);
     final confirmedView = scan.lastCapturedView;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Bar: ✕, Shoe 01 ⌵, Lightbulb, Flash
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _showExitConfirmationModal();
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Top Bar: ✕, Shoe 01 ⌵, Lightbulb, Flash
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 10.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: _showExitConfirmationModal,
                     behavior: HitTestBehavior.opaque,
                     child: Container(
                       constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
@@ -1178,7 +1295,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                 ],
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );
