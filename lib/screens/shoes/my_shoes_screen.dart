@@ -50,9 +50,9 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 12,
+              left: 16,
+              right: 16,
+              top: 16,
               bottom: 110,
             ),
             child: Column(
@@ -402,72 +402,90 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEEF8ED), // Pale green card from Figma Page 10
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        children: [
-          Image.asset(
-            AppAssets.emptyShoes,
-            height: 180,
-            fit: BoxFit.contain,
-            errorBuilder: (_, _, _) => const Icon(
-              Icons.roller_skating_outlined,
-              size: 72,
-              color: Color(0xFFCBD5E1),
+    return Center(
+      child: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(
+          maxWidth: 398,
+        ),
+        clipBehavior: Clip.antiAlias,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEDFAD7), // Surface/Brand_Light from Figma
+          borderRadius: BorderRadius.circular(12), // Corner radius: 12
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05), // Elevation/md
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'No Shoes Scanned Yet',
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 20,
-              color: Color(0xFF0D1014),
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Start your sustainable journey by scanning your first pair. We\'ll help you find the best way to reuse or recycle them.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF363C44),
-              fontSize: 13,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5A5A5A),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                elevation: 0,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const CameraCaptureScreen()),
-                );
-              },
-              child: const Text(
-                'Scan your first pair',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              AppAssets.emptyShoes,
+              height: 260,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) => const Icon(
+                Icons.roller_skating_outlined,
+                size: 72,
+                color: Color(0xFFCBD5E1),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              'No Shoes Scanned Yet',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.instrumentSans(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: const Color(0xFF0F172A),
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Start your sustainable journey by scanning your first pair. We\'ll help you find the best way to reuse or recycle them.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF64748B),
+                fontSize: 13,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryGreen,
+                  foregroundColor: const Color(0xFF0F172A),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const CameraCaptureScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Scan your first pair',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

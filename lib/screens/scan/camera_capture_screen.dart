@@ -1202,24 +1202,23 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         width: 50,
         height: 50,
         clipBehavior: Clip.antiAlias,
-        padding: const EdgeInsets.all(4),
+        padding: isCaptured ? EdgeInsets.zero : const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: const Color(0xCC000000), // Overlay/dark from Figma
           borderRadius: BorderRadius.circular(12), // Corner radius: 12
-          border: Border.all(
-            color: isActive ? AppColors.primaryGreen : Colors.white24,
-            width: isActive ? 1.5 : 1.0,
-          ),
+          border: isActive
+              ? Border.all(color: AppColors.primaryGreen, width: 1.5)
+              : (isCaptured ? null : Border.all(color: Colors.white24, width: 1.0)),
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
             if (isCaptured)
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 child: SizedBox(
-                  width: 42,
-                  height: 42,
+                  width: 50,
+                  height: 50,
                   child: localFile != null
                       ? (kIsWeb
                           ? Image.network(localFile.path, fit: BoxFit.cover)
