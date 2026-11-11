@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' as io;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,9 +51,36 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         await _processCapturedPhoto(photo);
       }
     } catch (_) {
-      // Fallback if camera is unavailable in emulator/browser: allow picking from gallery
+      // Show Figma "Camera Permission" dialog on permission exception
+      if (mounted) {
+        _showCameraPermissionDialog();
+      }
       _pickFromGallery();
     }
+  }
+
+  void _showCameraPermissionDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('"SHOES" Would Like to Access the Camera'),
+        content: const Padding(
+          padding: EdgeInsets.only(top: 8.0),
+          child: Text('Allow access to the camera to take photos.'),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Don't Allow"),
+          ),
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _pickFromGallery() async {
@@ -912,32 +940,25 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                         ),
                       ),
 
-                      // Floating Dynamic Instruction Banner (inside viewfinder at top)
+                      // Floating Dynamic Instruction Banner (inside viewfinder at top - Figma 357x48)
                       Positioned(
                         top: 20,
-                        left: 20,
-                        right: 20,
+                        left: 16,
+                        right: 16,
                         child: Center(
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
+                            constraints: const BoxConstraints(
+                              maxWidth: 357,
+                              minHeight: 48,
+                            ),
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
+                              horizontal: 12,
+                              vertical: 12,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.70),
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 0.8,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black38,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
+                              color: const Color(0xCC000000), // Overlay/dark (100% opacity over dark)
+                              borderRadius: BorderRadius.circular(12), // Corner radius: 12
                             ),
                             child: confirmedView != null
                                 ? Column(
@@ -954,7 +975,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                                         ),
                                       ),
                                       if (activeView != confirmedView) ...[
-                                        const SizedBox(height: 2),
+                                        const SizedBox(height: 4),
                                         Text(
                                           'Next: ${_formatViewTitle(activeView)}',
                                           textAlign: TextAlign.center,
@@ -1180,10 +1201,11 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       child: Container(
         width: 50,
         height: 50,
+        clipBehavior: Clip.antiAlias,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.35),
-          borderRadius: BorderRadius.circular(12),
+          color: const Color(0xCC000000), // Overlay/dark from Figma
+          borderRadius: BorderRadius.circular(12), // Corner radius: 12
           border: Border.all(
             color: isActive ? AppColors.primaryGreen : Colors.white24,
             width: isActive ? 1.5 : 1.0,
