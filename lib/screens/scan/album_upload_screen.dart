@@ -102,9 +102,12 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-          child: Column(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Center(
@@ -304,6 +307,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

@@ -183,9 +183,13 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       enableDrag: false,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -372,10 +376,12 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
-  }
+  },
+);
+}
 
   void _showExitConfirmationModal() {
     HapticFeedback.mediumImpact();
@@ -385,9 +391,13 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       enableDrag: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -482,10 +492,12 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
-  }
+  },
+);
+}
 
   void _showScannedCollectionsDropdown() {
     final scan = Provider.of<ScanProvider>(context, listen: false);
@@ -495,12 +507,16 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Material(
-          color: const Color(0xFF1E242B),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-          clipBehavior: Clip.antiAlias,
-          child: SafeArea(
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: Material(
+              color: const Color(0xFF1E242B),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+              clipBehavior: Clip.antiAlias,
+              child: SafeArea(
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -624,8 +640,9 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
             ),
           ),
         ),
-      );
-      },
+      ),
+    );
+  },
     );
   }
 
@@ -634,9 +651,13 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -788,8 +809,10 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
+    );
+  },
     );
   }
 
@@ -939,9 +962,12 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: SafeArea(
-          child: Column(
-            children: [
+        body: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: SafeArea(
+              child: Column(
+                children: [
               // Top Bar: ✕, Shoe 01 ⌵, Lightbulb, Flash
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -1331,12 +1357,14 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                 ],
               ),
             ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildAngleSlot(
     String key,

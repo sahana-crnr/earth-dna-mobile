@@ -99,9 +99,13 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
+        return Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: StatefulBuilder(
+              builder: (context, setModalState) {
             return Container(
               padding: EdgeInsets.only(
                 top: 24,
@@ -235,9 +239,11 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
               ),
             );
           },
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   }
 
   void _finishAndGoHome() {
@@ -324,9 +330,12 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -702,8 +711,9 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildAnglePlaceholder(String label) {
     return Container(

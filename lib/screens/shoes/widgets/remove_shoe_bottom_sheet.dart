@@ -21,8 +21,16 @@ class RemoveShoeBottomSheet extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) =>
-          RemoveShoeBottomSheet(shoe: shoe, onConfirmRemove: onConfirmRemove),
+      constraints: const BoxConstraints(maxWidth: 430),
+      builder: (_) => Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+          child: RemoveShoeBottomSheet(
+            shoe: shoe,
+            onConfirmRemove: onConfirmRemove,
+          ),
+        ),
+      ),
     );
   }
 

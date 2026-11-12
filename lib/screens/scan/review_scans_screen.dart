@@ -51,7 +51,10 @@ class ReviewScansScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Column(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
@@ -157,8 +160,9 @@ class ReviewScansScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildShoeCard(
     BuildContext context, {
@@ -355,10 +359,14 @@ class ReviewScansScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          decoration: const BoxDecoration(
+        return Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+              decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
@@ -434,8 +442,10 @@ class ReviewScansScreen extends StatelessWidget {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   }
 }

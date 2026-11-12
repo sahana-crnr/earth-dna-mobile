@@ -131,9 +131,12 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
+      body: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Shoe summary and the best available product image
@@ -668,8 +671,9 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildScanThumbnail(String label, String? url) {
     return Container(

@@ -73,9 +73,12 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFEAF5E9), // Light green from Figma Page 43
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
-          child: Column(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
+              child: Column(
             children: [
               const Spacer(),
 
@@ -177,8 +180,9 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildAnalysisStep({
     required int shoeNumber,

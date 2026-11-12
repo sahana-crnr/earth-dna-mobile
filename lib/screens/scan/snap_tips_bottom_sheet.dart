@@ -10,7 +10,13 @@ class SnapTipsBottomSheet {
       isScrollControlled: true,
       useSafeArea: false,
       backgroundColor: Colors.transparent,
-      builder: (context) => const _SnapTipsContent(),
+      constraints: const BoxConstraints(maxWidth: 430),
+      builder: (context) => Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+          child: const _SnapTipsContent(),
+        ),
+      ),
     );
   }
 }

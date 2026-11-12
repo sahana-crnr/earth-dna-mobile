@@ -36,9 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (modalCtx, setModalState) {
+        return Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: StatefulBuilder(
+              builder: (modalCtx, setModalState) {
             final bottomInset = MediaQuery.of(modalCtx).viewInsets.bottom;
             return Container(
               padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomInset),
@@ -146,9 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           },
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   }
 
   void _handleLogin() async {

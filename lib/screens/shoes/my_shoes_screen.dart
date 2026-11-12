@@ -26,6 +26,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (_) => const FilterBottomSheet(),
     );
   }
@@ -45,16 +46,16 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 430),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: RefreshIndicator(
               onRefresh: () => shoesProvider.fetchShoesAndSummary(),
               color: AppColors.primaryGreenDark,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
+                  left: 24,
+                  right: 24,
                   top: 16,
                   bottom: 110,
                 ),
@@ -412,14 +413,11 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
     return Center(
       child: Container(
         width: double.infinity,
-        constraints: const BoxConstraints(
-          maxWidth: 398,
-        ),
         clipBehavior: Clip.antiAlias,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
         decoration: BoxDecoration(
           color: const Color(0xFFEDFAD7), // Surface/Brand_Light from Figma
-          borderRadius: BorderRadius.circular(12), // Corner radius: 12
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05), // Elevation/md
@@ -442,7 +440,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                 color: Color(0xFFCBD5E1),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             Text(
               'No Shoes Scanned Yet',
               textAlign: TextAlign.center,
@@ -452,7 +450,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                 color: const Color(0xFF0F172A),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             const Text(
               'Start your sustainable journey by scanning your first pair. We\'ll help you find the best way to reuse or recycle them.',
               textAlign: TextAlign.center,
@@ -462,13 +460,13 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                 height: 1.4,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 52,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryGreen,
+                  backgroundColor: AppColors.buttonLime,
                   foregroundColor: const Color(0xFF0F172A),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(26),
@@ -476,6 +474,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                   elevation: 0,
                 ),
                 onPressed: () {
+                  HapticFeedback.mediumImpact();
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const CameraCaptureScreen(),

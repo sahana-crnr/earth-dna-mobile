@@ -52,13 +52,16 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ShoesProvider>(context, listen: false);
 
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-      child: SafeArea(
+    return Center(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          child: SafeArea(
         top: false,
         child: SingleChildScrollView(
           child: Column(
@@ -189,7 +192,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildCheckboxRow({

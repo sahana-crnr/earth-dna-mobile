@@ -36,8 +36,8 @@ class HomeDashboardScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 430),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: RefreshIndicator(
               onRefresh: () => shoesProvider.fetchShoesAndSummary(),
               color: AppColors.primaryGreenDark,
@@ -274,9 +274,13 @@ class HomeDashboardScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        return Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -563,9 +567,11 @@ class HomeDashboardScreen extends StatelessWidget {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   }
 
   static void _showEditProfileModal(
@@ -583,9 +589,13 @@ class HomeDashboardScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (modalCtx, setModalState) {
+        return Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: StatefulBuilder(
+              builder: (modalCtx, setModalState) {
             final bottomInset = MediaQuery.of(modalCtx).viewInsets.bottom;
             return Container(
               padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomInset),
@@ -806,9 +816,11 @@ class HomeDashboardScreen extends StatelessWidget {
               ),
             );
           },
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   }
 
   static Widget _buildEditLabel(String label) {

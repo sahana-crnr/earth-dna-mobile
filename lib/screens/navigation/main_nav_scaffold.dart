@@ -36,9 +36,13 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -172,8 +176,10 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
+    );
+  },
     );
   }
 
@@ -191,9 +197,10 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 430),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
           child: Stack(
+            fit: StackFit.expand,
             children: [
               IndexedStack(index: _currentIndex, children: screens),
 
