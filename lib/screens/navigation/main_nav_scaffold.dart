@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_assets.dart';
@@ -193,97 +194,90 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
         children: [
           IndexedStack(index: _currentIndex, children: screens),
 
-          // Floating Bottom Navigation Dock matching Figma
+          // Floating Bottom Navigation Dock (Optimized for iOS Home Bar & Android Gesture Nav)
           Positioned(
             left: 16,
             right: 16,
-            bottom: 20,
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    width: 358,
+            bottom: MediaQuery.of(context).padding.bottom > 0
+                ? MediaQuery.of(context).padding.bottom + 6
+                : 16,
+            child: Row(
+              children: [
+                // Navigation Pill (Home, My Shoe, Marketplace)
+                Expanded(
+                  child: Container(
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(36),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 20,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       children: [
-                        // Navigation Pill (Home, My Shoe, Marketplace)
                         Expanded(
-                          child: Container(
-                            height: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(36),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 6),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: _buildNavItem(0, AppAssets.navHome, 'Home'),
-                                ),
-                                Expanded(
-                                  child: _buildNavItem(
-                                    1,
-                                    AppAssets.navShoes,
-                                    'My Shoe',
-                                  ),
-                                ),
-                                Expanded(
-                                  child: _buildNavItem(
-                                    2,
-                                    AppAssets.navMarketplace,
-                                    'Marketplace',
-                                  ),
-                                ),
-                              ],
-                            ),
+                          child: _buildNavItem(0, AppAssets.navHome, 'Home'),
+                        ),
+                        Expanded(
+                          child: _buildNavItem(
+                            1,
+                            AppAssets.navShoes,
+                            'My Shoe',
                           ),
                         ),
-                        const SizedBox(width: 12),
-
-                        // Floating Circular Scan Button (Figma Lime Green Button)
-                        Semantics(
-                          button: true,
-                          label: 'Scan a pair',
-                          child: GestureDetector(
-                            onTap: _showScanOptionsModal,
-                            child: Container(
-                              width: 64,
-                              height: 64,
-                              decoration: BoxDecoration(
-                                color: AppColors.buttonLime,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.08),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: AppAssets.svg(
-                                  AppAssets.navScan,
-                                  color: Colors.black,
-                                  width: 32,
-                                  height: 32,
-                                ),
-                              ),
-                            ),
+                        Expanded(
+                          child: _buildNavItem(
+                            2,
+                            AppAssets.navMarketplace,
+                            'Marketplace',
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 12),
+
+                // Floating Circular Scan Button (Figma Lime Green Button)
+                Semantics(
+                  button: true,
+                  label: 'Scan a pair',
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      _showScanOptionsModal();
+                    },
+                    child: Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: AppColors.buttonLime,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: AppAssets.svg(
+                          AppAssets.navScan,
+                          color: Colors.black,
+                          width: 32,
+                          height: 32,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -298,7 +292,10 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
       selected: isSelected,
       label: label,
       child: GestureDetector(
-        onTap: () => setState(() => _currentIndex = index),
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() => _currentIndex = index);
+        },
         behavior: HitTestBehavior.opaque,
         child: Container(
           constraints: const BoxConstraints(minHeight: 48),

@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   }
 
   Future<void> _takePhoto() async {
+    HapticFeedback.mediumImpact();
     try {
       final XFile? photo = await _picker.pickImage(
         source: ImageSource.camera,
@@ -51,7 +53,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         await _processCapturedPhoto(photo);
       }
     } catch (_) {
-      // Show Figma "Camera Permission" dialog on permission exception
+      // Show native Camera Permission dialog on permission exception
       if (mounted) {
         _showCameraPermissionDialog();
       }
@@ -60,30 +62,59 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   }
 
   void _showCameraPermissionDialog() {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('"SHOES" Would Like to Access the Camera'),
-        content: const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text('Allow access to the camera to take photos.'),
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    if (isIOS) {
+      showCupertinoDialog(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('"SHOES" Would Like to Access the Camera'),
+          content: const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Text('Allow access to the camera to take photos.'),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Don't Allow"),
+            ),
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('OK'),
+            ),
+          ],
         ),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("Don't Allow"),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Camera Permission Needed'),
+          content: const Text(
+            'Allow EarthDNA to access the camera to capture shoes for ShoeDNA identification.',
           ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Don't Allow"),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.primaryGreen,
+                foregroundColor: const Color(0xFF0F172A),
+              ),
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Allow'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Future<void> _pickFromGallery() async {
+    HapticFeedback.selectionClick();
     try {
       final XFile? photo = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -103,6 +134,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
     final success = await scanProvider.captureAndUploadView(imageFile: photo);
 
     if (success && mounted) {
+      HapticFeedback.lightImpact();
       _bannerTimer?.cancel();
       _bannerTimer = Timer(const Duration(seconds: 3), () {
         if (mounted) {
@@ -120,6 +152,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
     if (scan.isShoeComplete(scan.activeShoeIndex)) {
       Timer(const Duration(milliseconds: 1400), () {
         if (mounted) {
+          HapticFeedback.heavyImpact();
           _showShoeCompleteModal();
         }
       });
@@ -127,11 +160,13 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   }
 
   void _selectView(String view) {
+    HapticFeedback.selectionClick();
     _bannerTimer?.cancel();
     Provider.of<ScanProvider>(context, listen: false).setActiveView(view);
   }
 
   void _removeViewPhoto(String view) {
+    HapticFeedback.lightImpact();
     _bannerTimer?.cancel();
     final scan = Provider.of<ScanProvider>(context, listen: false);
     scan.removePhoto(scan.activeShoeIndex, view);
@@ -343,6 +378,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   }
 
   void _showExitConfirmationModal() {
+    HapticFeedback.mediumImpact();
     showModalBottomSheet(
       context: context,
       isDismissible: true,

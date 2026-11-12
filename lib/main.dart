@@ -13,11 +13,19 @@ import 'screens/navigation/main_nav_scaffold.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set system navigation and status bar style
+  // Lock orientation to portrait for native mobile ergonomics
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Set system navigation and status bar style (Edge-to-edge on Android & iOS)
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 
