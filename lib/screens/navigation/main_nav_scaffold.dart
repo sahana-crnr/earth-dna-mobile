@@ -38,7 +38,8 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
       isScrollControlled: true,
       constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Center(
+        return Align(
+          alignment: Alignment.bottomCenter,
           child: SizedBox(
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: Material(
@@ -46,8 +47,9 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
               borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
               clipBehavior: Clip.antiAlias,
               child: SafeArea(
+                top: false,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,

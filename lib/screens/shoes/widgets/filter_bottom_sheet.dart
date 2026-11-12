@@ -52,7 +52,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   Widget build(BuildContext context) {
     final provider = Provider.of<ShoesProvider>(context, listen: false);
 
-    return Center(
+    return Align(
+      alignment: Alignment.bottomCenter,
       child: SizedBox(
         width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
         child: Container(

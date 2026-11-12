@@ -11,7 +11,8 @@ class SnapTipsBottomSheet {
       useSafeArea: false,
       backgroundColor: Colors.transparent,
       constraints: const BoxConstraints(maxWidth: 430),
-      builder: (context) => Center(
+      builder: (context) => Align(
+        alignment: Alignment.bottomCenter,
         child: SizedBox(
           width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
           child: const _SnapTipsContent(),

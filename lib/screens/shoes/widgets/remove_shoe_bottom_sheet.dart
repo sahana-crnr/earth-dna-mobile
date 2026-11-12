@@ -22,7 +22,8 @@ class RemoveShoeBottomSheet extends StatelessWidget {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       constraints: const BoxConstraints(maxWidth: 430),
-      builder: (_) => Center(
+      builder: (_) => Align(
+        alignment: Alignment.bottomCenter,
         child: SizedBox(
           width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
           child: RemoveShoeBottomSheet(

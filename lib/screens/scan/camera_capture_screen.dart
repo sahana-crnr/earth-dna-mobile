@@ -185,7 +185,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       isScrollControlled: true,
       constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Center(
+        return Align(
+          alignment: Alignment.bottomCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 430),
             child: Container(
@@ -396,7 +397,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       isScrollControlled: true,
       constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Center(
+        return Align(
+          alignment: Alignment.bottomCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 430),
             child: Container(
@@ -515,7 +517,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       backgroundColor: Colors.transparent,
       constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Center(
+        return Align(
+          alignment: Alignment.bottomCenter,
           child: SizedBox(
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: Material(
@@ -678,7 +681,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       backgroundColor: Colors.transparent,
       constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
-        return Center(
+        return Align(
+          alignment: Alignment.bottomCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 430),
             child: Container(
