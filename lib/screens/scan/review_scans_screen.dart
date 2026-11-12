@@ -364,87 +364,101 @@ class ReviewScansScreen extends StatelessWidget {
         return Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-              decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 44,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD1D5DB),
-                      borderRadius: BorderRadius.circular(2),
+            child: Material(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+              clipBehavior: Clip.antiAlias,
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 44,
+                            height: 4,
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD1D5DB),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Shoe $shoeNum Options',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF0F172A),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Manage photos grouped for this shoe',
+                          style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                        ),
+                        const SizedBox(height: 16),
+                        Material(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(16),
+                          clipBehavior: Clip.antiAlias,
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.edit_outlined,
+                              color: Color(0xFF0F172A),
+                            ),
+                            title: const Text(
+                              'Rename Shoe',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            onTap: () => Navigator.pop(ctx),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Material(
+                          color: const Color(0xFFFEF2F2),
+                          borderRadius: BorderRadius.circular(16),
+                          clipBehavior: Clip.antiAlias,
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.delete_outline,
+                              color: AppColors.error,
+                            ),
+                            title: const Text(
+                              'Remove Shoe',
+                              style: TextStyle(
+                                color: AppColors.error,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onTap: () => Navigator.pop(ctx),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Center(
+                          child: TextButton(
+                            onPressed: () => Navigator.pop(ctx),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: Color(0xFF0F172A),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Text(
-                  'Shoe $shoeNum Options',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF0F172A),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Manage photos grouped for this shoe',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: const Icon(
-                    Icons.edit_outlined,
-                    color: Color(0xFF0F172A),
-                  ),
-                  title: const Text(
-                    'Rename Shoe',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  onTap: () => Navigator.pop(ctx),
-                ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.delete_outline,
-                    color: AppColors.error,
-                  ),
-                  title: const Text(
-                    'Remove Shoe',
-                    style: TextStyle(
-                      color: AppColors.error,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onTap: () => Navigator.pop(ctx),
-                ),
-                const SizedBox(height: 8),
-                Center(
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Color(0xFF0F172A),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   },
 );
   }

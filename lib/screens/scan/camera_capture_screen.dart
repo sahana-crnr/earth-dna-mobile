@@ -196,9 +196,11 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           ),
           child: SafeArea(
             top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                 Center(
                   child: Container(
                     width: 44,
@@ -378,8 +380,9 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           ),
         ),
       ),
-    );
-  },
+    ),
+  );
+},
 );
 }
 
@@ -404,9 +407,11 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           ),
           child: SafeArea(
             top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                 Center(
                   child: Container(
                     width: 44,
@@ -494,8 +499,9 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           ),
         ),
       ),
-    );
-  },
+    ),
+  );
+},
 );
 }
 
@@ -520,10 +526,11 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 Center(
                   child: Container(
                     width: 44,
@@ -641,9 +648,10 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           ),
         ),
       ),
-    );
-  },
-    );
+    ),
+  );
+},
+);
   }
 
   void _showSnapTipsModal() {
@@ -1036,6 +1044,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                   ),
 
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
                         onTap: _showSnapTipsModal,
@@ -1198,34 +1207,40 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
             // Angle Selector Strip
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _formatViewTitle(activeView),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14,
-                          letterSpacing: -0.2,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _formatViewTitle(activeView),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14,
+                            letterSpacing: -0.2,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '$capturedCount/4',
-                        style: const TextStyle(
-                          color: Colors.white54,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(height: 2),
+                        Text(
+                          '$capturedCount/4',
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       _buildAngleSlot(
                         'top',
@@ -1234,7 +1249,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                         shoe?.photoForView('top'),
                         scan,
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 6),
                       _buildAngleSlot(
                         'right',
                         AppAssets.snapRight,
@@ -1242,7 +1257,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                         shoe?.photoForView('right'),
                         scan,
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 6),
                       _buildAngleSlot(
                         'left',
                         AppAssets.snapLeft,
@@ -1250,7 +1265,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                         shoe?.photoForView('left'),
                         scan,
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 6),
                       _buildAngleSlot(
                         'sole',
                         AppAssets.snapBottom,
@@ -1381,8 +1396,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       onTap: () => _selectView(key),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        width: 50,
-        height: 50,
+        width: 44,
+        height: 44,
         clipBehavior: Clip.antiAlias,
         padding: isCaptured ? EdgeInsets.zero : const EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -1399,8 +1414,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: SizedBox(
-                  width: 50,
-                  height: 50,
+                  width: 44,
+                  height: 44,
                   child: localFile != null
                       ? (kIsWeb
                           ? Image.network(localFile.path, fit: BoxFit.cover)
