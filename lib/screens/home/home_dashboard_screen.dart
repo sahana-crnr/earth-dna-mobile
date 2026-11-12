@@ -118,7 +118,7 @@ class HomeDashboardScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: 24),
 
                     // 4 Action Icons: Repair, Donate, Recycle, Resale (Figma PNG assets)
                     FittedBox(
@@ -137,7 +137,7 @@ class HomeDashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 26),
+                    const SizedBox(height: 28),
 
                 // "Your Recent Scans" Section Header
                 _buildSectionHeader(
@@ -168,7 +168,7 @@ class HomeDashboardScreen extends StatelessWidget {
                         )
                       : null,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
 
                 // Scans Content: Empty State Banner vs Horizontal Recent Scans List
                 if (shoes.isEmpty && shoesProvider.isLoading)
@@ -203,7 +203,7 @@ class HomeDashboardScreen extends StatelessWidget {
                     ),
                   ),
 
-                const SizedBox(height: 28),
+                const SizedBox(height: 32),
 
                 // "Marketplace" Section Header
                 _buildSectionHeader(
@@ -232,7 +232,7 @@ class HomeDashboardScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
 
                 // Horizontal Marketplace Preview Cards (Live from Database / Catalog)
                 Builder(
@@ -241,7 +241,7 @@ class HomeDashboardScreen extends StatelessWidget {
                     final displayItems =
                         liveItems.isNotEmpty ? liveItems : _marketplacePreviewItems;
                     return SizedBox(
-                      height: 195,
+                      height: 235,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         clipBehavior: Clip.none,
@@ -988,7 +988,7 @@ class HomeDashboardScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onMarketplaceTap,
       child: Container(
-        width: 170,
+        width: 172,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(22),
@@ -1009,7 +1009,7 @@ class HomeDashboardScreen extends StatelessWidget {
                 top: Radius.circular(22),
               ),
               child: Container(
-                height: 125,
+                height: 148,
                 width: double.infinity,
                 color: const Color(0xFFF8FAFC),
                 child: item.imageUrl != null && item.imageUrl!.isNotEmpty
@@ -1064,7 +1064,7 @@ class HomeDashboardScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 14,
-                vertical: 10,
+                vertical: 12,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1079,11 +1079,11 @@ class HomeDashboardScreen extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 4),
                   Text(
                     item.price,
                     style: GoogleFonts.dmSans(
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: const Color(0xFF0F172A),
                     ),
@@ -1159,7 +1159,7 @@ class HomeDashboardScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 flex: 6,
@@ -1169,30 +1169,31 @@ class HomeDashboardScreen extends StatelessWidget {
                     Text(
                       "Got Shoes You Don't\nWear Anymore?",
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 19,
                         fontWeight: FontWeight.w800,
                         color: Color(0xFF0F172A),
                         height: 1.25,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 10),
                     Text(
                       'See what they could become next.',
-                      style: TextStyle(fontSize: 13, color: Color(0xFF475569)),
+                      style: TextStyle(fontSize: 14, color: Color(0xFF475569)),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               Expanded(
                 flex: 4,
                 child: SizedBox(
-                  height: 90,
+                  height: 125,
                   child: Image.asset(
                     AppAssets.closetBanner,
                     fit: BoxFit.contain,
                     errorBuilder: (_, _, _) => const Icon(
                       Icons.door_sliding_outlined,
-                      size: 50,
+                      size: 60,
                       color: Color(0xFF84CC16),
                     ),
                   ),
@@ -1200,10 +1201,10 @@ class HomeDashboardScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
-            height: 48,
+            height: 52,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.buttonLime,
@@ -1224,7 +1225,7 @@ class HomeDashboardScreen extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   'Scan your first pair',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                 ),
               ),
             ),
