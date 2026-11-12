@@ -407,16 +407,29 @@ class ReviewScansScreen extends StatelessWidget {
                           color: const Color(0xFFF8FAFC),
                           borderRadius: BorderRadius.circular(16),
                           clipBehavior: Clip.antiAlias,
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.edit_outlined,
-                              color: Color(0xFF0F172A),
-                            ),
-                            title: const Text(
-                              'Rename Shoe',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
+                          child: InkWell(
                             onTap: () => Navigator.pop(ctx),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit_outlined,
+                                    color: Color(0xFF0F172A),
+                                  ),
+                                  SizedBox(width: 14),
+                                  Expanded(
+                                    child: Text(
+                                      'Rename Shoe',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF0F172A),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -424,19 +437,29 @@ class ReviewScansScreen extends StatelessWidget {
                           color: const Color(0xFFFEF2F2),
                           borderRadius: BorderRadius.circular(16),
                           clipBehavior: Clip.antiAlias,
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.delete_outline,
-                              color: AppColors.error,
-                            ),
-                            title: const Text(
-                              'Remove Shoe',
-                              style: TextStyle(
-                                color: AppColors.error,
-                                fontWeight: FontWeight.w600,
+                          child: InkWell(
+                            onTap: () => Navigator.pop(ctx),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete_outline,
+                                    color: AppColors.error,
+                                  ),
+                                  SizedBox(width: 14),
+                                  Expanded(
+                                    child: Text(
+                                      'Remove Shoe',
+                                      style: TextStyle(
+                                        color: AppColors.error,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            onTap: () => Navigator.pop(ctx),
                           ),
                         ),
                         const SizedBox(height: 8),

@@ -207,9 +207,12 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Photos section (4/8) matching Figma Page 61
@@ -427,7 +430,9 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildFieldLabel(String label) {
@@ -479,7 +484,8 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
     required bool isMain,
     String? imageUrl,
   }) {
-    final size = (MediaQuery.of(context).size.width - 64) / 3;
+    final effectiveWidth = MediaQuery.of(context).size.width.clamp(0.0, 430.0);
+    final size = (effectiveWidth - 64) / 3;
 
     return Container(
       width: size,
@@ -555,7 +561,8 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
   }
 
   Widget _buildAddPhotoTile() {
-    final size = (MediaQuery.of(context).size.width - 64) / 3;
+    final effectiveWidth = MediaQuery.of(context).size.width.clamp(0.0, 430.0);
+    final size = (effectiveWidth - 64) / 3;
 
     return Container(
       width: size,

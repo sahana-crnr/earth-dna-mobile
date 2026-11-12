@@ -52,10 +52,12 @@ class ManageShoeBottomSheet extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       child: SafeArea(
         top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Center(
               child: Container(
                 width: 44,
@@ -148,8 +150,9 @@ class ManageShoeBottomSheet extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildActionItem({
     required IconData icon,
@@ -168,12 +171,14 @@ class ManageShoeBottomSheet extends StatelessWidget {
           children: [
             Icon(icon, size: 22, color: color),
             const SizedBox(width: 14),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: color,
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
               ),
             ),
           ],

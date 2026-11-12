@@ -286,10 +286,12 @@ class HomeDashboardScreen extends StatelessWidget {
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                 // Drag handle
                 Center(
                   child: Container(
@@ -569,8 +571,9 @@ class HomeDashboardScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  },
+    ),
+  );
+},
 );
   }
 

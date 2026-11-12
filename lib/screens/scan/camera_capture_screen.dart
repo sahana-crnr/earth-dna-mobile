@@ -569,54 +569,70 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                   i < (shoes.isNotEmpty ? shoes.length : 1);
                   i++
                 ) ...[
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.white12,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.roller_skating,
-                        color: Colors.white70,
-                        size: 24,
-                      ),
-                    ),
-                    title: Text(
-                      'Shoe 0${i + 1}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      i < shoes.length && shoes[i].complete
-                          ? 'Fully Scanned'
-                          : 'In Progress',
-                      style: TextStyle(
-                        color: i < shoes.length && shoes[i].complete
-                            ? AppColors.primaryGreen
-                            : Colors.white54,
-                        fontSize: 12,
-                      ),
-                    ),
-                    trailing: i < shoes.length && shoes[i].complete
-                        ? const Icon(
-                            Icons.check,
-                            color: AppColors.primaryGreen,
-                            size: 20,
-                          )
-                        : const Icon(
-                            Icons.radio_button_unchecked,
-                            color: Colors.white30,
-                            size: 20,
-                          ),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(12),
                     onTap: () {
                       scan.switchActiveShoe(i);
                       Navigator.pop(ctx);
                     },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white12,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.roller_skating,
+                              color: Colors.white70,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Shoe 0${i + 1}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  i < shoes.length && shoes[i].complete
+                                      ? 'Fully Scanned'
+                                      : 'In Progress',
+                                  style: TextStyle(
+                                    color: i < shoes.length && shoes[i].complete
+                                        ? AppColors.primaryGreen
+                                        : Colors.white54,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          i < shoes.length && shoes[i].complete
+                              ? const Icon(
+                                  Icons.check,
+                                  color: AppColors.primaryGreen,
+                                  size: 20,
+                                )
+                              : const Icon(
+                                  Icons.radio_button_unchecked,
+                                  color: Colors.white30,
+                                  size: 20,
+                                ),
+                        ],
+                      ),
+                    ),
                   ),
                   const Divider(color: Colors.white12),
                 ],

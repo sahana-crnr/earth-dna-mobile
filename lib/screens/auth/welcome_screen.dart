@@ -49,11 +49,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Column(
-          children: [
-            // Top page view content
-            Expanded(
-              child: PageView(
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
+            child: Column(
+              children: [
+                // Top page view content
+                Expanded(
+                  child: PageView(
                 controller: _pageController,
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 children: [
@@ -225,7 +228,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   String _getButtonText() {
