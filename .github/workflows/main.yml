@@ -1,15 +1,20 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Flutter Production CI/CD
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
-permissions:
-  contents: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  analyze-and-test:
+    name: Code Quality & Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -24,7 +29,34 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build Web
+      - name: Static Code Analysis
+        run: flutter analyze
+
+      - name: Run Unit & Widget Tests
+        run: flutter test
+
+  build-and-deploy:
+    name: Build & Deploy Web Demo
+    needs: [analyze-and-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build Web Release
         run: flutter build web --release --base-href "/earth-dna-mobile/"
 
       - name: Deploy to GitHub Pages
