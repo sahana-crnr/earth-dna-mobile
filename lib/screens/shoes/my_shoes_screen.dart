@@ -55,140 +55,142 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                 padding: const EdgeInsets.only(
                   left: 16,
                   right: 16,
-                  top: 24,
+                  top: 16,
                   bottom: 110,
                 ),
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header: MY SHOES + Filter icon (Figma filter SVG)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'MY SHOES',
-                      style: GoogleFonts.instrumentSans(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.24,
-                        color: AppColors.textLightPrimary,
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: 'Filter shoes',
-                      icon: AppAssets.svg(
-                        AppAssets.filter,
-                        color: AppColors.textLightPrimary,
-                        width: 22,
-                        height: 22,
-                      ),
-                      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                      onPressed: () => _showFilters(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Success Alert Banner (Figma SVGs)
-                if (_showBanner && shoes.isNotEmpty)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.successContainer,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFBBF7D0)),
-                    ),
-                    child: Row(
+                    // Header: MY SHOES + Filter icon (Figma filter SVG)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AppAssets.svg(
-                          AppAssets.success,
-                          width: 24,
-                          height: 24,
+                        Text(
+                          'MY SHOES',
+                          style: GoogleFonts.instrumentSans(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.24,
+                            color: AppColors.textLightPrimary,
+                          ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        IconButton(
+                          tooltip: 'Filter shoes',
+                          icon: AppAssets.svg(
+                            AppAssets.filter,
+                            color: AppColors.textLightPrimary,
+                            width: 22,
+                            height: 22,
+                          ),
+                          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                          onPressed: () => _showFilters(context),
+                        ),
+                      ],
+                    ),
+
+                    if (shoes.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      // Success Alert Banner (Figma SVGs)
+                      if (_showBanner)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.successContainer,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFBBF7D0)),
+                          ),
+                          child: Row(
                             children: [
-                              Text(
-                                '$pairsCount pairs in your collection',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13,
-                                  color: Color(0xFF14532D),
+                              AppAssets.svg(
+                                AppAssets.success,
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '$pairsCount pairs in your collection',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                        color: Color(0xFF14532D),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'Your ShoeDNA profiles are ready.',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF166534),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const Text(
-                                'Your ShoeDNA profiles are ready.',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF166534),
+                              GestureDetector(
+                                onTap: () => setState(() => _showBanner = false),
+                                behavior: HitTestBehavior.opaque,
+                                child: Container(
+                                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                                  alignment: Alignment.center,
+                                  child: AppAssets.svg(
+                                    AppAssets.dismiss,
+                                    width: 14,
+                                    height: 14,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () => setState(() => _showBanner = false),
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                            alignment: Alignment.center,
-                            child: AppAssets.svg(
-                              AppAssets.dismiss,
-                              width: 14,
-                              height: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                // Summary values are shown only when the collection has data.
-                if (shoes.isNotEmpty)
-                  Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 18,
-                    horizontal: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 14,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildSummaryMetric(
-                        AppAssets.metricShoes,
-                        '$pairsCount',
-                        'Pairs Scanned',
-                      ),
+                      // Summary values
                       Container(
-                        width: 1,
-                        height: 40,
-                        color: Colors.grey.shade200,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(22),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 14,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildSummaryMetric(
+                              AppAssets.metricShoes,
+                              '$pairsCount',
+                              'Pairs Scanned',
+                            ),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              color: Colors.grey.shade200,
+                            ),
+                            _buildSummaryMetric(
+                              AppAssets.metricValue,
+                              totalVal,
+                              'Potential Value',
+                            ),
+                          ],
+                        ),
                       ),
-                      _buildSummaryMetric(
-                        AppAssets.metricValue,
-                        totalVal,
-                        'Potential Value',
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                    ] else
+                      const SizedBox(height: 20),
 
                 // 2-Column Shoe Grid
                 if (shoes.isEmpty && shoesProvider.isLoading)
@@ -432,7 +434,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
           children: [
             Image.asset(
               AppAssets.emptyShoes,
-              height: 260,
+              height: 280,
               fit: BoxFit.contain,
               errorBuilder: (_, _, _) => const Icon(
                 Icons.roller_skating_outlined,
