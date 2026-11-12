@@ -55,115 +55,123 @@ class ReviewScansScreen extends StatelessWidget {
           child: SizedBox(
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Dynamic Header based on completion (Page 33 vs 34)
-                    Text(
-                      allComplete
-                          ? '$totalCount Shoes Complete'
-                          : '$completedCount Shoes Complete · Shoe $totalCount In Progress',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
-                        letterSpacing: -0.3,
-                      ),
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      allComplete
-                          ? 'Review your photos before finishing the scan.'
-                          : 'Review your photos and complete any missing views.',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF64748B),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // List of Shoes
-                    if (shoes.isEmpty)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 40),
-                          child: Text(
-                            'No shoes added to this scan session yet.',
-                            style: TextStyle(color: Color(0xFF94A3B8)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Dynamic Header based on completion (Page 33 vs 34)
+                        Text(
+                          allComplete
+                              ? '$totalCount Shoes Complete'
+                              : '$completedCount Shoes Complete · Shoe $totalCount In Progress',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF0F172A),
+                            letterSpacing: -0.3,
                           ),
                         ),
-                      )
-                    else
-                      for (int i = 0; i < shoes.length; i++)
-                        _buildShoeCard(context, shoe: shoes[i], shoeIndex: i),
-                  ],
-                ),
-              ),
-            ),
+                        const SizedBox(height: 6),
+                        Text(
+                          allComplete
+                              ? 'Review your photos before finishing the scan.'
+                              : 'Review your photos and complete any missing views.',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
 
-            // Bottom Finish Scanning Button (Pages 33-34)
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: allComplete
-                        ? const Color(0xFF5A5A5A)
-                        : const Color(0xFFE2E8F0),
-                    foregroundColor: allComplete
-                        ? Colors.white
-                        : const Color(0xFF94A3B8),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26),
+                        // List of Shoes
+                        if (shoes.isEmpty)
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 40),
+                              child: Text(
+                                'No shoes added to this scan session yet.',
+                                style: TextStyle(color: Color(0xFF94A3B8)),
+                              ),
+                            ),
+                          )
+                        else
+                          for (int i = 0; i < shoes.length; i++)
+                            _buildShoeCard(
+                              context,
+                              shoe: shoes[i],
+                              shoeIndex: i,
+                            ),
+                      ],
                     ),
                   ),
-                  onPressed: allComplete
-                      ? () async {
-                          await scan.finishScanSession();
-                          if (context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ScanProcessingScreen(),
-                              ),
-                            );
-                          }
-                        }
-                      : null,
-                  child: const Text(
-                    'Finish Scanning',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+
+                // Bottom Finish Scanning Button (Pages 33-34)
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, -4),
+                      ),
+                    ],
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: allComplete
+                            ? const Color(0xFF5A5A5A)
+                            : const Color(0xFFE2E8F0),
+                        foregroundColor: allComplete
+                            ? Colors.white
+                            : const Color(0xFF94A3B8),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(26),
+                        ),
+                      ),
+                      onPressed: allComplete
+                          ? () async {
+                              await scan.finishScanSession();
+                              if (context.mounted) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const ScanProcessingScreen(),
+                                  ),
+                                );
+                              }
+                            }
+                          : null,
+                      child: const Text(
+                        'Finish Scanning',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 
   Widget _buildShoeCard(
     BuildContext context, {
@@ -368,7 +376,9 @@ class ReviewScansScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: Material(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(28),
+              ),
               clipBehavior: Clip.antiAlias,
               child: SafeArea(
                 top: false,
@@ -401,7 +411,10 @@ class ReviewScansScreen extends StatelessWidget {
                         const SizedBox(height: 4),
                         const Text(
                           'Manage photos grouped for this shoe',
-                          style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF64748B),
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Material(
@@ -411,7 +424,10 @@ class ReviewScansScreen extends StatelessWidget {
                           child: InkWell(
                             onTap: () => Navigator.pop(ctx),
                             child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
                               child: Row(
                                 children: [
                                   Icon(
@@ -441,7 +457,10 @@ class ReviewScansScreen extends StatelessWidget {
                           child: InkWell(
                             onTap: () => Navigator.pop(ctx),
                             child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
                               child: Row(
                                 children: [
                                   Icon(
@@ -484,7 +503,7 @@ class ReviewScansScreen extends StatelessWidget {
             ),
           ),
         );
-  },
-);
+      },
+    );
   }
 }

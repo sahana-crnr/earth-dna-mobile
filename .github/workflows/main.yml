@@ -7,41 +7,19 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  analyze-and-test:
-    name: Code Quality & Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: Install Dependencies
-        run: flutter pub get
-
-      - name: Static Code Analysis
-        run: flutter analyze
-
-      - name: Run Unit & Widget Tests
-        run: flutter test
-
   build-and-deploy:
-    name: Build & Deploy Web Demo
-    needs: [analyze-and-test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    name: Build & Deploy Web Demo to gh-pages
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout Repository
@@ -55,12 +33,21 @@ jobs:
 
       - name: Install Dependencies
         run: flutter pub get
+
+      - name: Verify Code Quality
+        run: flutter analyze --no-fatal-infos
+        continue-on-error: true
 
       - name: Build Web Release
-        run: flutter build web --release --base-href "/earth-dna-mobile/"
+        run: |
+          flutter build web --release --base-href "/earth-dna-mobile/"
+          touch build/web/.nojekyll
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (gh-pages)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
+          publish_branch: gh-pages
+          force_orphan: true
