@@ -516,8 +516,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       constraints: const BoxConstraints(maxWidth: 430),
       builder: (ctx) {
         return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 430),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: Material(
               color: const Color(0xFF1E242B),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
@@ -649,10 +649,11 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         ),
       ),
     ),
-  );
+  ),
+);
 },
 );
-  }
+}
 
   void _showSnapTipsModal() {
     showModalBottomSheet(

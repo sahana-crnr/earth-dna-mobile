@@ -712,7 +712,8 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
         ),
       ),
     ),
-  );
+  ),
+);
 }
 
   Widget _buildAnglePlaceholder(String label) {

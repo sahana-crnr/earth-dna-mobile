@@ -181,7 +181,8 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
         ),
       ),
     ),
-  );
+  ),
+);
 }
 
   Widget _buildAnalysisStep({

@@ -161,7 +161,8 @@ class ReviewScansScreen extends StatelessWidget {
         ),
       ),
     ),
-  );
+  ),
+);
 }
 
   Widget _buildShoeCard(

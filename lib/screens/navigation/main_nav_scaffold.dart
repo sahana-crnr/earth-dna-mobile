@@ -249,7 +249,6 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
       },
     );
   }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +298,11 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: _buildNavItem(0, AppAssets.navHome, 'Home'),
+                              child: _buildNavItem(
+                                0,
+                                AppAssets.navHome,
+                                'Home',
+                              ),
                             ),
                             Expanded(
                               child: _buildNavItem(
@@ -418,7 +421,10 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
-        title: Text('Marketplace', style: Theme.of(context).textTheme.titleLarge),
+        title: Text(
+          'Marketplace',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         backgroundColor: AppColors.backgroundLight,
       ),
       body: Center(
@@ -437,7 +443,10 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
                 child: const Icon(Icons.storefront_outlined, size: 32),
               ),
               const SizedBox(height: 20),
-              Text('Marketplace', style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                'Marketplace',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 8),
               Text(
                 'Listings will appear here when they are available.',

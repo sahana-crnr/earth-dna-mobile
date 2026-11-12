@@ -672,7 +672,8 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
         ),
       ),
     ),
-  );
+  ),
+);
 }
 
   Widget _buildScanThumbnail(String label, String? url) {

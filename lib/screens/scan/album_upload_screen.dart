@@ -308,6 +308,7 @@ class _AlbumUploadScreenState extends State<AlbumUploadScreen> {
         ),
       ),
     ),
-  );
+  ),
+);
 }
 }
