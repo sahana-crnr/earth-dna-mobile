@@ -37,7 +37,7 @@ class HomeDashboardScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
+            constraints: const BoxConstraints(maxWidth: 430),
             child: RefreshIndicator(
               onRefresh: () => shoesProvider.fetchShoesAndSummary(),
               color: AppColors.primaryGreenDark,

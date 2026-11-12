@@ -190,97 +190,102 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
-      body: Stack(
-        children: [
-          IndexedStack(index: _currentIndex, children: screens),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 430),
+          child: Stack(
+            children: [
+              IndexedStack(index: _currentIndex, children: screens),
 
-          // Floating Bottom Navigation Dock (Optimized for iOS Home Bar & Android Gesture Nav)
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: MediaQuery.of(context).padding.bottom > 0
-                ? MediaQuery.of(context).padding.bottom + 6
-                : 16,
-            child: Row(
-              children: [
-                // Navigation Pill (Home, My Shoe, Marketplace)
-                Expanded(
-                  child: Container(
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(36),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 20,
-                          offset: const Offset(0, 6),
+              // Floating Bottom Navigation Dock (Optimized for iOS Home Bar & Android Gesture Nav)
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).padding.bottom > 0
+                    ? MediaQuery.of(context).padding.bottom + 6
+                    : 16,
+                child: Row(
+                  children: [
+                    // Navigation Pill (Home, My Shoe, Marketplace)
+                    Expanded(
+                      child: Container(
+                        height: 64,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(36),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 20,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildNavItem(0, AppAssets.navHome, 'Home'),
-                        ),
-                        Expanded(
-                          child: _buildNavItem(
-                            1,
-                            AppAssets.navShoes,
-                            'My Shoe',
-                          ),
-                        ),
-                        Expanded(
-                          child: _buildNavItem(
-                            2,
-                            AppAssets.navMarketplace,
-                            'Marketplace',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                // Floating Circular Scan Button (Figma Lime Green Button)
-                Semantics(
-                  button: true,
-                  label: 'Scan a pair',
-                  child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.mediumImpact();
-                      _showScanOptionsModal();
-                    },
-                    child: Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: AppColors.buttonLime,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: AppAssets.svg(
-                          AppAssets.navScan,
-                          color: Colors.black,
-                          width: 32,
-                          height: 32,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildNavItem(0, AppAssets.navHome, 'Home'),
+                            ),
+                            Expanded(
+                              child: _buildNavItem(
+                                1,
+                                AppAssets.navShoes,
+                                'My Shoe',
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildNavItem(
+                                2,
+                                AppAssets.navMarketplace,
+                                'Marketplace',
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 12),
+
+                    // Floating Circular Scan Button (Figma Lime Green Button)
+                    Semantics(
+                      button: true,
+                      label: 'Scan a pair',
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                          _showScanOptionsModal();
+                        },
+                        child: Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: AppColors.buttonLime,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: AppAssets.svg(
+                              AppAssets.navScan,
+                              color: Colors.black,
+                              width: 32,
+                              height: 32,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

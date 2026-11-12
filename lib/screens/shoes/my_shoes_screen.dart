@@ -44,18 +44,21 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () => shoesProvider.fetchShoesAndSummary(),
-          color: AppColors.primaryGreenDark,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 16,
-              bottom: 110,
-            ),
-            child: Column(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: RefreshIndicator(
+              onRefresh: () => shoesProvider.fetchShoesAndSummary(),
+              color: AppColors.primaryGreenDark,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 24,
+                  bottom: 110,
+                ),
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header: MY SHOES + Filter icon (Figma filter SVG)
@@ -247,7 +250,9 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildSummaryMetric(
