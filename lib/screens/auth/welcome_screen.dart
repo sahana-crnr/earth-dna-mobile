@@ -32,16 +32,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void _proceedToApp() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const MainNavScaffold()),
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
   void _skipToScan() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const MainNavScaffold(initialIndex: 0)),
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const CameraCaptureScreen()));
   }
 
   @override
