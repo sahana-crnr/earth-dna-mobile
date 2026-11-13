@@ -27,6 +27,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   final ImagePicker _picker = ImagePicker();
   CameraController? _cameraController;
   bool _isCameraReady = false;
+  bool _isLoadingCamera = true;
   bool _isFlashOn = false;
   Timer? _bannerTimer;
 
@@ -54,11 +55,20 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         );
         await _cameraController!.initialize();
         if (mounted) {
-          setState(() => _isCameraReady = true);
+          setState(() {
+            _isCameraReady = true;
+            _isLoadingCamera = false;
+          });
         }
+        return;
       }
     } catch (e) {
       debugPrint('Hardware camera init skipped: $e');
+    }
+    if (mounted) {
+      setState(() {
+        _isLoadingCamera = false;
+      });
     }
   }
 
@@ -1234,6 +1244,16 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                                         .value.previewSize?.width ??
                                     1,
                                 child: CameraPreview(_cameraController!),
+                              ),
+                            )
+                          else if (_isLoadingCamera)
+                            const ColoredBox(
+                              color: Colors.black,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primaryGreen,
+                                  strokeWidth: 2,
+                                ),
                               ),
                             )
                           else
