@@ -23,6 +23,12 @@ class AppAssets {
   static const String snapLeft = 'assets/images/figma/snap_left.png';
   static const String snapBottom = 'assets/images/figma/snap_bottom.png';
 
+  // Viewfinder camera preview assets (matches Figma capture screens)
+  static const String viewfinderTop = 'assets/images/figma/viewfinder_top.png';
+  static const String viewfinderRight = 'assets/images/figma/viewfinder_right.png';
+  static const String viewfinderLeft = 'assets/images/figma/viewfinder_left.png';
+  static const String viewfinderBottom = 'assets/images/figma/viewfinder_bottom.png';
+
   // Snap Tips Avoid
   static const String avoidMultiple = 'assets/images/figma/avoid_multiple.png';
   static const String avoidCropped = 'assets/images/figma/avoid_cropped.png';

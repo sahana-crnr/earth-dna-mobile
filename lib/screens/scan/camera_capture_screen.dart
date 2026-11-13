@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -24,18 +25,57 @@ class CameraCaptureScreen extends StatefulWidget {
 
 class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   final ImagePicker _picker = ImagePicker();
+  CameraController? _cameraController;
+  bool _isCameraReady = false;
+  bool _isFlashOn = false;
   Timer? _bannerTimer;
 
   @override
   void initState() {
     super.initState();
+    _initHardwareCamera();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ScanProvider>(context, listen: false).startNewScan();
     });
   }
 
+  Future<void> _initHardwareCamera() async {
+    try {
+      final cameras = await availableCameras();
+      if (cameras.isNotEmpty) {
+        final backCam = cameras.firstWhere(
+          (c) => c.lensDirection == CameraLensDirection.back,
+          orElse: () => cameras.first,
+        );
+        _cameraController = CameraController(
+          backCam,
+          ResolutionPreset.high,
+          enableAudio: false,
+        );
+        await _cameraController!.initialize();
+        if (mounted) {
+          setState(() => _isCameraReady = true);
+        }
+      }
+    } catch (e) {
+      debugPrint('Hardware camera init skipped: $e');
+    }
+  }
+
+  Future<void> _toggleFlash() async {
+    setState(() => _isFlashOn = !_isFlashOn);
+    try {
+      if (_cameraController != null && _cameraController!.value.isInitialized) {
+        await _cameraController!.setFlashMode(
+          _isFlashOn ? FlashMode.torch : FlashMode.off,
+        );
+      }
+    } catch (_) {}
+  }
+
   @override
   void dispose() {
+    _cameraController?.dispose();
     _bannerTimer?.cancel();
     super.dispose();
   }
@@ -43,12 +83,19 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   Future<void> _takePhoto() async {
     HapticFeedback.mediumImpact();
     try {
-      final XFile? photo = await _picker.pickImage(
-        source: ImageSource.camera,
-        maxWidth: 1200,
-        maxHeight: 1200,
-        imageQuality: 85,
-      );
+      XFile? photo;
+      if (_isCameraReady &&
+          _cameraController != null &&
+          _cameraController!.value.isInitialized) {
+        photo = await _cameraController!.takePicture();
+      } else {
+        photo = await _picker.pickImage(
+          source: ImageSource.camera,
+          maxWidth: 1200,
+          maxHeight: 1200,
+          imageQuality: 85,
+        );
+      }
 
       if (photo != null) {
         await _processCapturedPhoto(photo);
@@ -963,14 +1010,30 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       case 'top':
         return 'Place the shoe flat and capture it from above';
       case 'right':
-        return 'Capture the right side of the shoe.';
+        return 'Capture the Right side of the shoe.';
       case 'left':
         return 'Capture the Left side of the shoe.';
       case 'sole':
       case 'bottom':
-        return 'Capture the bottom sole of the shoe.';
+        return 'Capture the Bottom of the shoe.';
       default:
-        return 'Point camera directly at shoe';
+        return 'Capture the shoe.';
+    }
+  }
+
+  String _getViewfinderAsset(String view) {
+    switch (view.toLowerCase()) {
+      case 'top':
+        return AppAssets.viewfinderTop;
+      case 'right':
+        return AppAssets.viewfinderRight;
+      case 'left':
+        return AppAssets.viewfinderLeft;
+      case 'sole':
+      case 'bottom':
+        return AppAssets.viewfinderBottom;
+      default:
+        return AppAssets.viewfinderTop;
     }
   }
 
@@ -1112,23 +1175,33 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                               ),
                             ),
                             const SizedBox(width: 4),
-                            Container(
-                              constraints: const BoxConstraints(
-                                minWidth: 44,
-                                minHeight: 44,
-                              ),
-                              alignment: Alignment.center,
+                            GestureDetector(
+                              onTap: _toggleFlash,
+                              behavior: HitTestBehavior.opaque,
                               child: Container(
-                                width: 38,
-                                height: 38,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white12,
-                                  shape: BoxShape.circle,
+                                constraints: const BoxConstraints(
+                                  minWidth: 44,
+                                  minHeight: 44,
                                 ),
-                                child: const Icon(
-                                  Icons.flash_off,
-                                  color: Colors.white,
-                                  size: 20,
+                                alignment: Alignment.center,
+                                child: Container(
+                                  width: 38,
+                                  height: 38,
+                                  decoration: BoxDecoration(
+                                    color: _isFlashOn
+                                        ? Colors.white24
+                                        : Colors.white12,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    _isFlashOn
+                                        ? Icons.flash_on
+                                        : Icons.flash_off,
+                                    color: _isFlashOn
+                                        ? AppColors.buttonLime
+                                        : Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1138,124 +1211,112 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                     ),
                   ),
 
-                  // Camera Viewfinder Canvas with floating instructions
+                  // Camera Viewfinder Canvas with floating instructions (Matches Figma screens)
                   Expanded(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: Colors.white12),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            // Viewfinder background reticle
-                            const Icon(
-                              Icons.filter_center_focus,
-                              size: 200,
-                              color: Colors.white10,
-                            ),
-
-                            // Orientation guideline based on active view
-                            Opacity(
-                              opacity: 0.35,
-                              child: Image.asset(
-                                _getAssetForView(activeView),
-                                width: 140,
-                                height: 140,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, _, _) => const Icon(
-                                  Icons.roller_skating,
-                                  size: 110,
-                                  color: Colors.white24,
+                      width: double.infinity,
+                      color: Colors.black,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.expand,
+                        children: [
+                          // 1. Live Camera Feed or Authentic Shoe Viewfinder Preview
+                          if (_isCameraReady &&
+                              _cameraController != null &&
+                              _cameraController!.value.isInitialized)
+                            FittedBox(
+                              fit: BoxFit.cover,
+                              child: SizedBox(
+                                width: _cameraController!
+                                        .value.previewSize?.height ??
+                                    1,
+                                height: _cameraController!
+                                        .value.previewSize?.width ??
+                                    1,
+                                child: CameraPreview(_cameraController!),
+                              ),
+                            )
+                          else
+                            Image.asset(
+                              _getViewfinderAsset(activeView),
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Image.asset(
+                                AppAssets.ftue3ViewfinderShoe,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(
+                                  color: const Color(0xFF1E242B),
                                 ),
                               ),
                             ),
 
-                            // Floating Dynamic Instruction Banner (inside viewfinder at top - Figma 357x48)
-                            Positioned(
-                              top: 20,
-                              left: 16,
-                              right: 16,
-                              child: Center(
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 250),
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 357,
-                                    minHeight: 48,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xCC000000,
-                                    ), // Overlay/dark (100% opacity over dark)
-                                    borderRadius: BorderRadius.circular(
-                                      12,
-                                    ), // Corner radius: 12
-                                  ),
-                                  child: confirmedView != null
-                                      ? Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
+                          // 2. Floating Dynamic Instruction Banner (matches Figma screens 1-5)
+                          Positioned(
+                            top: 24,
+                            left: 20,
+                            right: 20,
+                            child: Center(
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xCC000000), // Semi-transparent black pill
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: confirmedView != null
+                                    ? Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            '${_formatViewBanner(confirmedView)} captured',
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w700,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
+                                          if (activeView != confirmedView) ...[
+                                            const SizedBox(height: 2),
                                             Text(
-                                              '${_formatViewBanner(confirmedView)} captured',
+                                              'Next: ${_formatViewTitle(activeView)}',
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                letterSpacing: -0.2,
+                                                color: Colors.white70,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                            if (activeView !=
-                                                confirmedView) ...[
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                'Next: ${_formatViewTitle(activeView)}',
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
                                           ],
-                                        )
-                                      : Text(
-                                          _getInstructionText(activeView),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            letterSpacing: -0.2,
-                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        _getInstructionText(activeView),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: -0.2,
                                         ),
+                                      ),
+                              ),
+                            ),
+                          ),
+
+                          if (scan.isUploading)
+                            Container(
+                              color: Colors.black54,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primaryGreen,
                                 ),
                               ),
                             ),
-
-                            if (scan.isUploading)
-                              Container(
-                                color: Colors.black54,
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primaryGreen,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
