@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../widgets/earth_video_hero.dart';
-import '../navigation/main_nav_scaffold.dart';
-import '../scan/camera_capture_screen.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {

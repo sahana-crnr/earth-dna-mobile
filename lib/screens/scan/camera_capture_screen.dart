@@ -1240,10 +1240,10 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                             Image.asset(
                               _getViewfinderAsset(activeView),
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Image.asset(
+                              errorBuilder: (_, _, _) => Image.asset(
                                 AppAssets.ftue3ViewfinderShoe,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
+                                errorBuilder: (_, _, _) => Container(
                                   color: const Color(0xFF1E242B),
                                 ),
                               ),
