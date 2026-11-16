@@ -1,6 +1,10 @@
+import 'dart:io' as io;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/scan_session_model.dart';
 import '../../providers/scan_provider.dart';
@@ -15,9 +19,15 @@ class ReviewScansScreen extends StatelessWidget {
     final session = scan.session;
     final shoes = session?.shoes ?? [];
 
-    final completedCount = shoes.where((s) => s.complete).length;
+    final completedCount = shoes
+        .where((s) => s.complete || scan.isShoeComplete(shoes.indexOf(s)))
+        .length;
     final totalCount = shoes.isNotEmpty ? shoes.length : 1;
     final allComplete = completedCount == totalCount && shoes.isNotEmpty;
+    final inProgressShoeNumber = shoes.indexWhere(
+          (s) => !s.complete && !scan.isShoeComplete(shoes.indexOf(s)),
+        ) +
+        1;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -58,18 +68,16 @@ class ReviewScansScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
+                    // Figma auto-layout padding: T 12, B 20, L 16, R 16
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Dynamic Header based on completion (Page 33 vs 34)
+                        // Dynamic Header based on completion (Matches Figma: 2 Shoes Complete · Shoe 3 In Progress)
                         Text(
                           allComplete
                               ? '$totalCount Shoes Complete'
-                              : '$completedCount Shoes Complete · Shoe $totalCount In Progress',
+                              : '$completedCount Shoes Complete · Shoe ${inProgressShoeNumber > 0 ? inProgressShoeNumber : totalCount} In Progress',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
@@ -87,9 +95,10 @@ class ReviewScansScreen extends StatelessWidget {
                             color: Color(0xFF64748B),
                           ),
                         ),
+                        // Figma auto-layout Gap: 24 between header and cards list
                         const SizedBox(height: 24),
 
-                        // List of Shoes
+                        // List of Shoes (Figma auto-layout Gap: 8 between cards)
                         if (shoes.isEmpty)
                           const Center(
                             child: Padding(
@@ -101,44 +110,44 @@ class ReviewScansScreen extends StatelessWidget {
                             ),
                           )
                         else
-                          for (int i = 0; i < shoes.length; i++)
+                          for (int i = 0; i < shoes.length; i++) ...[
                             _buildShoeCard(
                               context,
+                              scan: scan,
                               shoe: shoes[i],
                               shoeIndex: i,
                             ),
+                            if (i < shoes.length - 1)
+                              const SizedBox(height: 8), // Figma gap: 8 between shoe cards
+                          ],
                       ],
                     ),
                   ),
                 ),
 
-                // Bottom Finish Scanning Button (Pages 33-34)
+                // Bottom Finish Scanning Button (Figma: W 398 Fill x H 56 Fill, Radius 100)
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+                  decoration: const BoxDecoration(
                     color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, -4),
-                      ),
-                    ],
+                    border: Border(
+                      top: BorderSide(color: Color(0xFFF1F5F9), width: 1),
+                    ),
                   ),
                   child: SizedBox(
                     width: double.infinity,
-                    height: 52,
+                    height: 56, // Figma W 398 x H 56
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: allComplete
-                            ? const Color(0xFF5A5A5A)
-                            : const Color(0xFFE2E8F0),
+                            ? AppColors.buttonLime // Figma #B5E076
+                            : const Color(0xFFF1F5F9), // Action/Disabled/Background
                         foregroundColor: allComplete
-                            ? Colors.white
-                            : const Color(0xFF94A3B8),
+                            ? const Color(0xFF0F172A)
+                            : const Color(0xFF94A3B8), // Action/Disabled/Content
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(26),
+                          borderRadius: BorderRadius.circular(100), // Corner radius 100
                         ),
                       ),
                       onPressed: allComplete
@@ -175,19 +184,26 @@ class ReviewScansScreen extends StatelessWidget {
 
   Widget _buildShoeCard(
     BuildContext context, {
+    required ScanProvider scan,
     required ScanShoe shoe,
     required int shoeIndex,
   }) {
     final shoeNum = (shoeIndex + 1).toString().padLeft(2, '0');
-    final isComplete = shoe.complete;
-    final missingCount = 4 - shoe.views.length;
+    final isComplete = shoe.complete || scan.isShoeComplete(shoeIndex);
+    final capturedCount = scan.getCapturedCount(shoeIndex);
+    final missingCount = 4 - capturedCount;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFF1F5F9), width: 1),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
+          // Header Row: Shoe 01 Complete / Missing 3 images ... Three dots menu
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -203,21 +219,41 @@ class ReviewScansScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   if (isComplete)
-                    const Text(
-                      'Complete',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF16A34A),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFDCFCE7),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        'Complete',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF15803D),
+                        ),
                       ),
                     )
                   else
-                    Text(
-                      'Missing $missingCount images',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFD97706),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFEF3C7),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Missing $missingCount images',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFFB45309),
+                        ),
                       ),
                     ),
                 ],
@@ -232,6 +268,7 @@ class ReviewScansScreen extends StatelessWidget {
                 onPressed: () {
                   _showShoeOptions(
                     context,
+                    scan: scan,
                     shoeNum: shoeNum,
                     shoeIndex: shoeIndex,
                   );
@@ -241,16 +278,16 @@ class ReviewScansScreen extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // 4-View Thumbnails Row (Pages 33-34)
+          // 4-View Thumbnails Row (Figma: W 86 x H 86 each, Gap: 10)
           Row(
             children: [
-              _buildViewSlot(context, shoe, 'top', 'Top'),
-              const SizedBox(width: 8),
-              _buildViewSlot(context, shoe, 'left', 'Left'),
-              const SizedBox(width: 8),
-              _buildViewSlot(context, shoe, 'right', 'Right'),
-              const SizedBox(width: 8),
-              _buildViewSlot(context, shoe, 'sole', 'Bottom'),
+              _buildViewSlot(context, scan, shoe, shoeIndex, 'top', 'Top'),
+              const SizedBox(width: 10), // Gap: 10
+              _buildViewSlot(context, scan, shoe, shoeIndex, 'left', 'Left'),
+              const SizedBox(width: 10), // Gap: 10
+              _buildViewSlot(context, scan, shoe, shoeIndex, 'right', 'Right'),
+              const SizedBox(width: 10), // Gap: 10
+              _buildViewSlot(context, scan, shoe, shoeIndex, 'sole', 'Bottom'),
             ],
           ),
         ],
@@ -260,99 +297,118 @@ class ReviewScansScreen extends StatelessWidget {
 
   Widget _buildViewSlot(
     BuildContext context,
+    ScanProvider scan,
     ScanShoe shoe,
+    int shoeIndex,
     String viewName,
     String label,
   ) {
-    final photo = shoe.photoForView(viewName);
-    final hasPhoto = photo != null;
+    final localPhoto = scan.getLocalPhoto(shoeIndex, viewName);
+    final remotePhoto = shoe.photoForView(viewName);
+    final hasPhoto = localPhoto != null ||
+        (remotePhoto?.url != null && remotePhoto!.url!.isNotEmpty);
 
     return Expanded(
       child: AspectRatio(
-        aspectRatio: 1,
+        aspectRatio: 1.0, // Figma W 86 x H 86
         child: hasPhoto
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    if (photo.url != null)
-                      Image.network(
-                        photo.url!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => const Icon(
-                          Icons.roller_skating,
-                          color: Color(0xFF94A3B8),
-                          size: 24,
-                        ),
-                      )
-                    else
-                      const Icon(
-                        Icons.roller_skating,
-                        color: Color(0xFF94A3B8),
-                        size: 24,
-                      ),
-                    Positioned(
-                      bottom: 4,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            label,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
+            ? GestureDetector(
+                onTap: () {
+                  // Tapping existing thumbnail -> opens that view to retake (Blue Note spec)
+                  scan.switchActiveShoe(shoeIndex);
+                  scan.setActiveView(viewName);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12), // Corner radius 12
+                    border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (localPhoto != null)
+                        kIsWeb
+                            ? Image.network(localPhoto.path, fit: BoxFit.cover)
+                            : Image.file(
+                                io.File(localPhoto.path),
+                                fit: BoxFit.cover,
+                              )
+                      else if (remotePhoto?.url != null)
+                        Image.network(
+                          remotePhoto!.url!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => _fallbackAsset(viewName),
+                        )
+                      else
+                        _fallbackAsset(viewName),
+
+                      // Pill Label overlay at bottom center (e.g. Top, Left, Right, Bottom)
+                      Positioned(
+                        bottom: 4,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.65),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              label,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
-            : InkWell(
+            : GestureDetector(
                 onTap: () {
-                  // Switch active view and return to camera
+                  // Tapping placeholder -> return to camera and capture missing view (Blue Note spec)
+                  scan.switchActiveShoe(shoeIndex);
+                  scan.setActiveView(viewName);
                   Navigator.pop(context);
                 },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFBEB),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFFF59E0B),
-                      style: BorderStyle.solid,
-                    ),
+                child: CustomPaint(
+                  painter: const DashedBorderPainter(
+                    color: Color(0xFFF59E0B),
+                    strokeWidth: 1.2,
+                    radius: 12,
+                    dashWidth: 4,
+                    dashSpace: 3,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.add, size: 20, color: Color(0xFFD97706)),
-                      SizedBox(height: 2),
-                      Text(
-                        'Add Image',
-                        style: TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFD97706),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFBEB), // Light cream
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.add, size: 20, color: Color(0xFFD97706)),
+                        SizedBox(height: 2),
+                        Text(
+                          'Add Image',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFFD97706),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -360,8 +416,25 @@ class ReviewScansScreen extends StatelessWidget {
     );
   }
 
+  Widget _fallbackAsset(String viewName) {
+    switch (viewName.toLowerCase()) {
+      case 'top':
+        return Image.asset(AppAssets.viewfinderTop, fit: BoxFit.cover);
+      case 'left':
+        return Image.asset(AppAssets.viewfinderLeft, fit: BoxFit.cover);
+      case 'right':
+        return Image.asset(AppAssets.viewfinderRight, fit: BoxFit.cover);
+      case 'sole':
+      case 'bottom':
+        return Image.asset(AppAssets.viewfinderBottom, fit: BoxFit.cover);
+      default:
+        return Image.asset(AppAssets.snapTop, fit: BoxFit.cover);
+    }
+  }
+
   void _showShoeOptions(
     BuildContext context, {
+    required ScanProvider scan,
     required String shoeNum,
     required int shoeIndex,
   }) {
@@ -418,44 +491,14 @@ class ReviewScansScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Material(
-                          color: const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(16),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () => Navigator.pop(ctx),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.edit_outlined,
-                                    color: Color(0xFF0F172A),
-                                  ),
-                                  SizedBox(width: 14),
-                                  Expanded(
-                                    child: Text(
-                                      'Rename Shoe',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF0F172A),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Material(
                           color: const Color(0xFFFEF2F2),
                           borderRadius: BorderRadius.circular(16),
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
-                            onTap: () => Navigator.pop(ctx),
+                            onTap: () {
+                              Navigator.pop(ctx);
+                              scan.removeShoe(shoeIndex);
+                            },
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -506,4 +549,60 @@ class ReviewScansScreen extends StatelessWidget {
       },
     );
   }
+}
+
+/// Custom painter for the dashed orange border around missing view slots (Figma spec)
+class DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double radius;
+  final double dashWidth;
+  final double dashSpace;
+
+  const DashedBorderPainter({
+    required this.color,
+    this.strokeWidth = 1.0,
+    this.radius = 12.0,
+    this.dashWidth = 4.0,
+    this.dashSpace = 3.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final rrect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(
+        strokeWidth / 2,
+        strokeWidth / 2,
+        size.width - strokeWidth,
+        size.height - strokeWidth,
+      ),
+      Radius.circular(radius),
+    );
+
+    final path = Path()..addRRect(rrect);
+    final metrics = path.computeMetrics();
+
+    for (final metric in metrics) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        final len = (distance + dashWidth < metric.length)
+            ? dashWidth
+            : metric.length - distance;
+        final extractPath = metric.extractPath(distance, distance + len);
+        canvas.drawPath(extractPath, paint);
+        distance += dashWidth + dashSpace;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant DashedBorderPainter oldDelegate) =>
+      oldDelegate.color != color ||
+      oldDelegate.strokeWidth != strokeWidth ||
+      oldDelegate.radius != radius;
 }

@@ -81,6 +81,17 @@ class ScanProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeShoe(int shoeIndex) {
+    if (_currentSession != null && shoeIndex < _currentSession!.shoes.length) {
+      _currentSession!.shoes.removeAt(shoeIndex);
+      _localCapturedPhotos.remove(shoeIndex);
+      if (_activeShoeIndex >= _currentSession!.shoes.length) {
+        _activeShoeIndex = (_currentSession!.shoes.length - 1).clamp(0, 99);
+      }
+      notifyListeners();
+    }
+  }
+
   Future<void> startNewScan() async {
     _isUploading = true;
     _errorMessage = null;
