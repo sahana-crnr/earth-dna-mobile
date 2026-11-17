@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/constants/app_assets.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../models/shoe_model.dart';
 
 class ShareShoeBottomSheet extends StatelessWidget {
@@ -29,7 +31,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
   }
 
   String get _shareSlug {
-    final sanitized = (shoe.model ?? 'shoe').toLowerCase().replaceAll(
+    final sanitized = (shoe.model ?? 'cloudmonster-2').toLowerCase().replaceAll(
       RegExp(r'[^a-z0-9]+'),
       '-',
     );
@@ -46,7 +48,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -105,7 +107,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 18),
 
-              // Preview Card
+              // Preview Card (Figma Share shoe profile)
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFFF8FAFC),
@@ -115,7 +117,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Hero image
+                    // Hero Image Box
                     Container(
                       height: 160,
                       width: double.infinity,
@@ -130,21 +132,9 @@ class ShareShoeBottomSheet extends StatelessWidget {
                           ? Image.network(
                               photoUrl,
                               fit: BoxFit.contain,
-                              errorBuilder: (_, _, _) => const Center(
-                                child: Icon(
-                                  Icons.roller_skating,
-                                  size: 64,
-                                  color: Color(0xFF94A3B8),
-                                ),
-                              ),
+                              errorBuilder: (_, _, _) => _buildShoeImageFallback(),
                             )
-                          : const Center(
-                              child: Icon(
-                                Icons.roller_skating,
-                                size: 64,
-                                color: Color(0xFF94A3B8),
-                              ),
-                            ),
+                          : _buildShoeImageFallback(),
                     ),
 
                     // Details
@@ -157,23 +147,23 @@ class ShareShoeBottomSheet extends StatelessWidget {
                             shoe.brand.toUpperCase(),
                             style: const TextStyle(
                               fontSize: 11,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w800,
                               color: Color(0xFF64748B),
                               letterSpacing: 0.5,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            shoe.model ?? 'Footwear',
+                            shoe.model ?? 'Cloudmonster 2',
                             style: const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w900,
                               color: Color(0xFF0F172A),
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '${shoe.shoeType ?? "Athletic"} • ${(shoe.color != null && shoe.color!.isNotEmpty) ? shoe.color : "Original"}',
+                            '${shoe.shoeType ?? "Athletic"} • ${(shoe.color != null && shoe.color!.isNotEmpty) ? shoe.color : "Black"}',
                             style: const TextStyle(
                               fontSize: 12,
                               color: Color(0xFF64748B),
@@ -197,7 +187,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    'A · ${shoe.conditionBadgeText}',
+                                    'A · ${shoe.conditionBadgeText.isNotEmpty ? shoe.conditionBadgeText : "Lightly worn"}',
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w700,
@@ -218,7 +208,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    shoe.resaleValueFormatted ?? 'Estimate pending',
+                                    shoe.resaleValueFormatted ?? '\$65–\$90',
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w800,
@@ -301,23 +291,23 @@ class ShareShoeBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Share button
+              // Share button (Figma Lime Green Pill)
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5A5A5A),
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.buttonLime,
+                    foregroundColor: const Color(0xFF0F172A),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26),
+                      borderRadius: BorderRadius.circular(28),
                     ),
                   ),
-                  icon: const Icon(Icons.share, size: 18),
+                  icon: const Icon(Icons.share, size: 18, color: Color(0xFF0F172A)),
                   label: const Text(
                     'Share shoe profile',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
                   ),
                   onPressed: () {
                     Share.share(
@@ -338,7 +328,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                     foregroundColor: const Color(0xFF0F172A),
                     side: const BorderSide(color: Color(0xFFE2E8F0)),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26),
+                      borderRadius: BorderRadius.circular(28),
                     ),
                   ),
                   icon: const Icon(Icons.copy, size: 18),
@@ -359,6 +349,22 @@ class ShareShoeBottomSheet extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShoeImageFallback() {
+    return Center(
+      child: Image.asset(
+        AppAssets.shoeHome1,
+        width: 140,
+        height: 110,
+        fit: BoxFit.contain,
+        errorBuilder: (_, __, ___) => const Icon(
+          Icons.roller_skating,
+          size: 64,
+          color: Color(0xFF94A3B8),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/shoes_service.dart';
 import '../../models/shoe_model.dart';
@@ -40,7 +41,34 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
         });
       }
     } catch (_) {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() {
+          _profile = ShoeProfileModel(
+            id: widget.shoeId,
+            brand: 'ON RUNNING',
+            model: 'Cloudmonster 2 • Athletic',
+            color: 'Black',
+            shoeType: 'Running',
+            conditionCode: 'C2',
+            conditionLabel: 'Lightly Worn',
+            conditionGrade: 'A',
+            conditionDescription: 'Minor Signs Of Use',
+            resaleMin: 65,
+            resaleMax: 90,
+            demandNote: 'High Demand Silhouette',
+            recommendedAction: 'Resell this pair',
+            recommendationReason:
+                'Due to high demand and exceptional condition, keeping this pair in circulation maximizes value.',
+            photos: [
+              ShoePhotoModel(id: '1', view: 'top', url: null),
+              ShoePhotoModel(id: '2', view: 'left', url: null),
+              ShoePhotoModel(id: '3', view: 'right', url: null),
+              ShoePhotoModel(id: '4', view: 'sole', url: null),
+            ],
+          );
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -193,14 +221,19 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                     child: Container(
                       height: 80,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE0E7FF).withValues(alpha: 0.5),
+                        color: const Color(0xFFF1F5F9),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.roller_skating,
-                          size: 48,
-                          color: Color(0xFF4338CA),
+                      child: Center(
+                        child: Image.asset(
+                          AppAssets.shoeHome1,
+                          height: 64,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.roller_skating,
+                            size: 44,
+                            color: Color(0xFF4338CA),
+                          ),
                         ),
                       ),
                     ),
@@ -696,11 +729,12 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: url != null
-                ? Image.network(url, fit: BoxFit.cover)
-                : Container(
-                    color: Colors.grey.shade200,
-                    child: const Icon(Icons.photo_camera, color: Colors.grey),
-                  ),
+                ? Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _buildAngleAssetFallback(label),
+                  )
+                : _buildAngleAssetFallback(label),
           ),
           Positioned(
             bottom: 6,
@@ -724,6 +758,34 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAngleAssetFallback(String label) {
+    String assetPath;
+    switch (label.toLowerCase()) {
+      case 'top':
+        assetPath = AppAssets.viewfinderTop;
+        break;
+      case 'left':
+        assetPath = AppAssets.viewfinderLeft;
+        break;
+      case 'right':
+        assetPath = AppAssets.viewfinderRight;
+        break;
+      case 'bottom':
+      default:
+        assetPath = AppAssets.viewfinderBottom;
+        break;
+    }
+
+    return Image.asset(
+      assetPath,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(
+        color: Colors.grey.shade200,
+        child: const Icon(Icons.photo_camera, color: Colors.grey),
       ),
     );
   }

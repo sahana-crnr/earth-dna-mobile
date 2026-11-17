@@ -63,139 +63,140 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           ),
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           child: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Center(
-                child: Container(
-                  width: 44,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1D5DB),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-
-              // Title and Reset Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            top: false,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Handle bar
+                  Center(
+                    child: Container(
+                      width: 44,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD1D5DB),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+
+                  // Title and Reset Button (Figma My Shoe_Filter)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Filters',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF0F172A),
+                        ),
+                      ),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          setState(() {
+                            _actionTaken.clear();
+                            _recommendedAction.clear();
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: const Color(0xFFCBD5E1)),
+                          ),
+                          child: const Text(
+                            'Reset',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF0F172A),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Section: Action Taken (Figma My Shoe_Filter)
                   const Text(
-                    'Filters',
+                    'Action Taken',
                     style: TextStyle(
-                      fontSize: 20,
                       fontWeight: FontWeight.w800,
+                      fontSize: 15,
                       color: Color(0xFF0F172A),
                     ),
                   ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {
-                      setState(() {
-                        _actionTaken.clear();
-                        _recommendedAction.clear();
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(20),
+                  const SizedBox(height: 6),
+                  for (final opt in _actionTakenOptions)
+                    _buildCheckboxRow(
+                      label: opt['label']!,
+                      isSelected: _actionTaken.contains(opt['value']),
+                      onTap: () => _toggle(_actionTaken, opt['value']!),
+                    ),
+                  const SizedBox(height: 20),
+
+                  // Section: Recommended Action (Figma My Shoe_Filter)
+                  const Text(
+                    'Recommended Action',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                      color: Color(0xFF0F172A),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  for (final opt in _recommendedOptions)
+                    _buildCheckboxRow(
+                      label: opt['label']!,
+                      isSelected: _recommendedAction.contains(opt['value']),
+                      onTap: () => _toggle(_recommendedAction, opt['value']!),
+                    ),
+                  const SizedBox(height: 28),
+
+                  // Apply Button (Figma Lime Green Pill)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.buttonLime,
+                        foregroundColor: const Color(0xFF0F172A),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
                       ),
+                      onPressed: () {
+                        provider.updateFilters(
+                          actionTaken: _actionTaken,
+                          condition: provider.selectedCondition,
+                          recommendedAction: _recommendedAction,
+                          resaleBucket: provider.selectedResaleBucket,
+                        );
+                        Navigator.of(context).pop();
+                      },
                       child: const Text(
-                        'Reset',
+                        'Apply',
                         style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF0F172A),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-
-              // Section: Action Taken (Page 58)
-              const Text(
-                'Action Taken',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  color: Color(0xFF0F172A),
-                ),
-              ),
-              const SizedBox(height: 6),
-              for (final opt in _actionTakenOptions)
-                _buildCheckboxRow(
-                  label: opt['label']!,
-                  isSelected: _actionTaken.contains(opt['value']),
-                  onTap: () => _toggle(_actionTaken, opt['value']!),
-                ),
-              const SizedBox(height: 20),
-
-              // Section: Recommended Action (Page 58)
-              const Text(
-                'Recommended Action',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  color: Color(0xFF0F172A),
-                ),
-              ),
-              const SizedBox(height: 6),
-              for (final opt in _recommendedOptions)
-                _buildCheckboxRow(
-                  label: opt['label']!,
-                  isSelected: _recommendedAction.contains(opt['value']),
-                  onTap: () => _toggle(_recommendedAction, opt['value']!),
-                ),
-              const SizedBox(height: 28),
-
-              // Apply Button (Page 58 dark gray pill)
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5A5A5A),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26),
-                    ),
-                  ),
-                  onPressed: () {
-                    provider.updateFilters(
-                      actionTaken: _actionTaken,
-                      condition: provider.selectedCondition,
-                      recommendedAction: _recommendedAction,
-                      resaleBucket: provider.selectedResaleBucket,
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    'Apply',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
-    ),
-  ),
-);
+    );
   }
 
   Widget _buildCheckboxRow({
@@ -207,8 +208,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        constraints: const BoxConstraints(minHeight: 44),
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        constraints: const BoxConstraints(minHeight: 40),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
             Container(
@@ -234,7 +235,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: const Color(0xFF0F172A),
               ),
