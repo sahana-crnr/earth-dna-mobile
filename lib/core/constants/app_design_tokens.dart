@@ -18,6 +18,11 @@ class AppRadii {
   static const double pill = 999;
 }
 
+/// Minimum touch target size compliance (Figma & Accessibility 44px x 44px)
+class AppTouchTarget {
+  static const double min = 44.0;
+}
+
 class AppElevation {
   static const List<BoxShadow> card = [
     BoxShadow(

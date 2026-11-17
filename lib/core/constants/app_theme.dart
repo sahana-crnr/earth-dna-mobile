@@ -6,11 +6,12 @@ import 'app_design_tokens.dart';
 
 class AppTheme {
   static ThemeData get light {
-    final text = GoogleFonts.manropeTextTheme();
+    final text = GoogleFonts.urbanistTextTheme();
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.backgroundLight,
       visualDensity: VisualDensity.standard,
+      materialTapTargetSize: MaterialTapTargetSize.padded,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.buttonLime,
         primary: AppColors.buttonLime,
@@ -19,39 +20,51 @@ class AppTheme {
         error: AppColors.error,
       ),
       textTheme: text.copyWith(
-        headlineSmall: GoogleFonts.instrumentSans(
-          fontSize: 32,
+        headlineLarge: GoogleFonts.urbanist(
+          fontSize: 34,
+          height: 1.2,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textLightPrimary,
+        ),
+        headlineMedium: GoogleFonts.urbanist(
+          fontSize: 28,
           height: 1.25,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textLightPrimary,
+        ),
+        headlineSmall: GoogleFonts.urbanist(
+          fontSize: 24,
+          height: 1.25,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.32,
           color: AppColors.textLightPrimary,
         ),
-        titleLarge: GoogleFonts.manrope(
+        titleLarge: GoogleFonts.urbanist(
           fontSize: 22,
           height: 1.27,
           fontWeight: FontWeight.w600,
           color: AppColors.textLightPrimary,
         ),
-        titleMedium: GoogleFonts.manrope(
+        titleMedium: GoogleFonts.urbanist(
           fontSize: 20,
           height: 1.3,
           fontWeight: FontWeight.w600,
           color: AppColors.textLightPrimary,
         ),
-        titleSmall: GoogleFonts.manrope(
+        titleSmall: GoogleFonts.urbanist(
           fontSize: 18,
           height: 1.25,
           fontWeight: FontWeight.w600,
           color: AppColors.textLightPrimary,
         ),
-        bodyLarge: GoogleFonts.manrope(
+        bodyLarge: GoogleFonts.urbanist(
           fontSize: 16,
           height: 1.5,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.32,
           color: AppColors.textLightPrimary,
         ),
-        bodyMedium: GoogleFonts.manrope(
+        bodyMedium: GoogleFonts.urbanist(
           fontSize: 14,
           height: 1.43,
           fontWeight: FontWeight.w500,
@@ -109,12 +122,18 @@ class AppTheme {
           backgroundColor: AppColors.buttonLime,
           foregroundColor: AppColors.textLightPrimary,
           elevation: 0,
-          minimumSize: const Size(48, 56),
-          textStyle: GoogleFonts.manrope(
+          minimumSize: const Size(AppTouchTarget.min, 56),
+          textStyle: GoogleFonts.urbanist(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
           shape: const StadiumBorder(),
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          minimumSize: const Size(AppTouchTarget.min, AppTouchTarget.min),
+          tapTargetSize: MaterialTapTargetSize.padded,
         ),
       ),
     );

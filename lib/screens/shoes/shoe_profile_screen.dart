@@ -6,6 +6,7 @@ import '../../core/services/shoes_service.dart';
 import '../../models/shoe_model.dart';
 import '../../providers/shoes_provider.dart';
 import '../../widgets/condition_badge.dart';
+import '../donation/donation_flow_sheet.dart';
 import 'condition_feedback_screen.dart';
 import 'widgets/manage_shoe_bottom_sheet.dart';
 import 'widgets/resale_value_bottom_sheet.dart';
@@ -565,7 +566,7 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                   const SizedBox(height: 8),
                   Center(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => _showOtherOptionsSheet(p),
                       child: const Text(
                         'See other options',
                         style: TextStyle(
@@ -807,6 +808,145 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void _showOtherOptionsSheet(ShoeProfileModel shoe) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 430),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFCBD5E1),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Text(
+                  'Other Circular Options',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF0F172A),
+                      ) ??
+                      const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF0F172A),
+                      ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Choose an alternative path for this pair to maximize its circular lifecycle.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF64748B),
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildOtherOptionTile(
+                  title: 'Donate this pair',
+                  subtitle: 'Pass along to someone in need via verified partners',
+                  icon: Icons.volunteer_activism_outlined,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    DonationFlowSheet.show(context, shoeProfile: shoe);
+                  },
+                ),
+                _buildOtherOptionTile(
+                  title: 'Repair & restore',
+                  subtitle: 'Fix soles, stitching, or clean to extend its lifespan',
+                  icon: Icons.build_outlined,
+                  onTap: () => Navigator.pop(ctx),
+                ),
+                _buildOtherOptionTile(
+                  title: 'Recycle materials',
+                  subtitle: 'Grind down into circular polymers for athletic turf',
+                  icon: Icons.recycling_outlined,
+                  onTap: () => Navigator.pop(ctx),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOtherOptionTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFF1F5F9)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF1F5F9),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 20, color: const Color(0xFF334155)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, size: 20, color: Color(0xFF94A3B8)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

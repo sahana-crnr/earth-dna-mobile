@@ -12,6 +12,7 @@ import '../../providers/shoes_provider.dart';
 import '../../widgets/condition_badge.dart';
 import '../auth/login_screen.dart';
 import '../auth/register_screen.dart';
+import '../donation/donation_flow_sheet.dart';
 import '../scan/camera_capture_screen.dart';
 import '../shoes/shoe_profile_screen.dart';
 
@@ -130,7 +131,11 @@ class HomeDashboardScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildActionIcon('Repair', AppAssets.actionRepair),
-                            _buildActionIcon('Donate', AppAssets.actionDonate),
+                            _buildActionIcon(
+                              'Donate',
+                              AppAssets.actionDonate,
+                              onTap: () => DonationFlowSheet.show(context),
+                            ),
                             _buildActionIcon('Recycle', AppAssets.actionRecycle),
                             _buildActionIcon('Resale', AppAssets.actionResale),
                           ],
@@ -1100,49 +1105,54 @@ class HomeDashboardScreen extends StatelessWidget {
   // ─── 4 Action Icons (Figma assets) ──────────────────────────────────────────
   Widget _buildActionIcon(
     String label,
-    String assetPath,
-  ) {
-    return Column(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.cardLightBorder),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Image.asset(
-              assetPath,
-              width: 44,
-              height: 44,
-              fit: BoxFit.contain,
-              errorBuilder: (_, _, _) => const Icon(
-                Icons.check_circle_outline,
-                size: 28,
-                color: Color(0xFF64748B),
+    String assetPath, {
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Column(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.cardLightBorder),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Image.asset(
+                assetPath,
+                width: 44,
+                height: 44,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => const Icon(
+                  Icons.check_circle_outline,
+                  size: 28,
+                  color: Color(0xFF64748B),
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1E293B),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1E293B),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -118,5 +118,15 @@ class ShoesProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> updateShoeAction(String shoeId, String action) async {
+    try {
+      await _shoesService.updateShoe(shoeId, {'actionTaken': action});
+      await fetchShoesAndSummary();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
 

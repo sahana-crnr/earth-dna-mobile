@@ -197,7 +197,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: RichText(
                           text: TextSpan(
-                            style: GoogleFonts.manrope(
+                            style: GoogleFonts.urbanist(
                               fontSize: 13,
                               color: Colors.white60,
                             ),
