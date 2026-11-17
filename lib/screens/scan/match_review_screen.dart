@@ -29,8 +29,6 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
   final ScanService _scanService = ScanService();
 
   late Map<String, dynamic> _data;
-  List<CatalogBrand> _catalogBrands = [];
-  List<CatalogSize> _catalogSizes = [];
   bool _isSubmitting = false;
   int _activeShoeIndex = 0;
 
@@ -112,11 +110,8 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
   Future<void> _loadCatalog() async {
     try {
       final brands = await _catalogService.getBrands();
-      final sizes = await _catalogService.getSizes();
       if (mounted) {
         setState(() {
-          _catalogBrands = brands;
-          _catalogSizes = sizes;
           for (final b in brands) {
             if (!_availableBrands.contains(b.name)) {
               _availableBrands.add(b.name);
@@ -129,6 +124,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
 
   void _confirmMatch(Map<String, dynamic> shoeItem) async {
     setState(() {
+      _isSubmitting = true;
       _confirmedShoes[_activeShoeIndex] = true;
     });
 
@@ -140,7 +136,14 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
       if (mounted) {
         Provider.of<ShoesProvider>(context, listen: false).fetchShoesAndSummary();
       }
-    } catch (_) {}
+    } catch (_) {
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 
   void _onNextShoeTapped() {
@@ -411,7 +414,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                   ),
                                   const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
-                                    value: categoryOptions.contains(selectedCategory)
+                                    initialValue: categoryOptions.contains(selectedCategory)
                                         ? selectedCategory
                                         : categoryOptions.first,
                                     isExpanded: true,
@@ -467,7 +470,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                   ),
                                   const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
-                                    value: subcategoryOptions.contains(selectedSubcategory)
+                                    initialValue: subcategoryOptions.contains(selectedSubcategory)
                                         ? selectedSubcategory
                                         : subcategoryOptions.first,
                                     isExpanded: true,
@@ -581,7 +584,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                   ),
                                   const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
-                                    value: colorOptions.contains(selectedColor)
+                                    initialValue: colorOptions.contains(selectedColor)
                                         ? selectedColor
                                         : colorOptions.first,
                                     isExpanded: true,
@@ -636,7 +639,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                   ),
                                   const SizedBox(height: 6),
                                   DropdownButtonFormField<String>(
-                                    value: sizeOptions.contains(selectedSize)
+                                    initialValue: sizeOptions.contains(selectedSize)
                                         ? selectedSize
                                         : sizeOptions[2],
                                     isExpanded: true,
@@ -810,7 +813,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                     child: ListView.separated(
                       shrinkWrap: true,
                       itemCount: _availableBrands.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                      separatorBuilder: (_, _) => const Divider(height: 1, color: Color(0xFFF1F5F9)),
                       itemBuilder: (_, index) {
                         final b = _availableBrands[index];
                         final isSel = b.toLowerCase() == currentBrand.toLowerCase();
@@ -1107,7 +1110,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                           width: 30,
                                           height: 30,
                                           fit: BoxFit.contain,
-                                          errorBuilder: (_, __, ___) => const Icon(
+                                          errorBuilder: (_, _, _) => const Icon(
                                             Icons.roller_skating,
                                             size: 22,
                                             color: Color(0xFF64748B),
@@ -1518,7 +1521,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                           width: 40,
                                           height: 40,
                                           fit: BoxFit.contain,
-                                          errorBuilder: (_, __, ___) => const Icon(
+                                          errorBuilder: (_, _, _) => const Icon(
                                             Icons.roller_skating,
                                             size: 30,
                                             color: Color(0xFF64748B),
@@ -1775,7 +1778,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
     return Image.asset(
       assetPath,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(
+      errorBuilder: (_, _, _) => Container(
         color: const Color(0xFFF1F5F9),
         child: Center(
           child: Column(

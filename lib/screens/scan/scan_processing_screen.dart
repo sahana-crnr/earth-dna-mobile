@@ -143,7 +143,7 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
                             width: 105,
                             height: 105,
                             fit: BoxFit.contain,
-                            errorBuilder: (_, __, ___) => const Icon(
+                            errorBuilder: (_, _, _) => const Icon(
                               Icons.roller_skating,
                               size: 84,
                               color: Color(0xFF166534),

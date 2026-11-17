@@ -282,12 +282,14 @@ class ShoeSummaryModel {
   final double? potentialValueMin;
   final double? potentialValueMax;
   final String currency;
+  final double? co2SavingsKg;
 
   ShoeSummaryModel({
     required this.pairsScanned,
     this.potentialValueMin,
     this.potentialValueMax,
     this.currency = 'USD',
+    this.co2SavingsKg,
   });
 
   int get totalShoes => pairsScanned;
@@ -303,11 +305,21 @@ class ShoeSummaryModel {
       curr = json['potentialValue']['currency'] as String? ?? 'USD';
     }
 
+    double? co2;
+    if (json['co2SavingsKg'] != null) {
+      co2 = (json['co2SavingsKg'] as num?)?.toDouble();
+    } else if (json['carbonSavingsKg'] != null) {
+      co2 = (json['carbonSavingsKg'] as num?)?.toDouble();
+    } else if (json['carbonImpact'] != null) {
+      co2 = (json['carbonImpact'] as num?)?.toDouble();
+    }
+
     return ShoeSummaryModel(
       pairsScanned: json['pairsScanned'] as int? ?? 0,
       potentialValueMin: min,
       potentialValueMax: max,
       currency: curr,
+      co2SavingsKg: co2,
     );
   }
 }

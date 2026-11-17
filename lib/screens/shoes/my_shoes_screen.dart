@@ -458,7 +458,7 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
               AppAssets.emptyShoes,
               height: 240,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Icon(
+              errorBuilder: (_, _, _) => const Icon(
                 Icons.roller_skating_outlined,
                 size: 64,
                 color: Color(0xFFCBD5E1),

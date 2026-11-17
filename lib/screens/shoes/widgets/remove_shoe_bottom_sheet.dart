@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/app_assets.dart';
 import '../../../models/shoe_model.dart';
 
 class RemoveShoeBottomSheet extends StatelessWidget {

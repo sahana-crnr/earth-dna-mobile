@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/services/shoes_service.dart';
 import '../../models/shoe_model.dart';
@@ -226,7 +225,7 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                                 photos.first.url!,
                                 height: 64,
                                 fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => const Icon(
+                                errorBuilder: (_, _, _) => const Icon(
                                   Icons.roller_skating,
                                   size: 40,
                                   color: Color(0xFF64748B),
@@ -734,7 +733,7 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                 ? Image.network(
                     url,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _buildAnglePlaceholder(label),
+                    errorBuilder: (_, _, _) => _buildAnglePlaceholder(label),
                   )
                 : _buildAnglePlaceholder(label),
           ),
