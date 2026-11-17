@@ -129,7 +129,7 @@ class RemoveShoeBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            shoe.model ?? 'Cloudmonster 2',
+                            shoe.model ?? 'Footwear',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -140,7 +140,7 @@ class RemoveShoeBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Colorway: ${(shoe.color != null && shoe.color!.isNotEmpty) ? shoe.color : "Black"}',
+                            'Colorway: ${(shoe.color != null && shoe.color!.isNotEmpty) ? shoe.color : "Original"}',
                             style: const TextStyle(
                               fontSize: 12,
                               color: Color(0xFF64748B),
@@ -234,14 +234,11 @@ class RemoveShoeBottomSheet extends StatelessWidget {
   }
 
   Widget _buildShoeAssetFallback() {
-    return Center(
-      child: Image.asset(
-        AppAssets.shoeHome1,
-        fit: BoxFit.contain,
-        errorBuilder: (_, __, ___) => const Icon(
-          Icons.roller_skating,
-          color: Color(0xFF94A3B8),
-        ),
+    return const Center(
+      child: Icon(
+        Icons.roller_skating,
+        color: Color(0xFF94A3B8),
+        size: 32,
       ),
     );
   }

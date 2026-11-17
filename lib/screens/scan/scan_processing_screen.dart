@@ -36,7 +36,7 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
     _pollingTimer = Timer.periodic(const Duration(milliseconds: 1800), (timer) async {
       final scan = Provider.of<ScanProvider>(context, listen: false);
       final rawShoeCount = scan.session?.shoes.length ?? 0;
-      final shoeCount = rawShoeCount > 0 ? rawShoeCount : 4;
+      final shoeCount = rawShoeCount > 0 ? rawShoeCount : 1;
 
       if (!mounted) {
         timer.cancel();
@@ -67,7 +67,7 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
   Widget build(BuildContext context) {
     final scan = Provider.of<ScanProvider>(context);
     final rawCount = scan.session?.shoes.length ?? 0;
-    final shoeCount = rawCount > 0 ? rawCount : 4;
+    final shoeCount = rawCount > 0 ? rawCount : 1;
     final analyzedCount = min(_pollCount - 1, shoeCount).clamp(0, shoeCount);
 
     return Scaffold(
@@ -181,7 +181,7 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
 
                   // Progress Counter (Figma: "3 of 4 pairs analyzed")
                   Text(
-                    '$analyzedCount of $shoeCount pairs analyzed',
+                    '$analyzedCount of $shoeCount ${shoeCount == 1 ? "pair" : "pairs"} analyzed',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,

@@ -42,32 +42,28 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
       }
     } catch (_) {
       if (mounted) {
-        setState(() {
+        final provider = Provider.of<ShoesProvider>(context, listen: false);
+        final existingCard =
+            provider.shoes.where((s) => s.id == widget.shoeId).firstOrNull;
+        if (existingCard != null) {
           _profile = ShoeProfileModel(
-            id: widget.shoeId,
-            brand: 'ON RUNNING',
-            model: 'Cloudmonster 2 • Athletic',
-            color: 'Black',
-            shoeType: 'Running',
-            conditionCode: 'C2',
-            conditionLabel: 'Lightly Worn',
-            conditionGrade: 'A',
-            conditionDescription: 'Minor Signs Of Use',
-            resaleMin: 65,
-            resaleMax: 90,
-            demandNote: 'High Demand Silhouette',
-            recommendedAction: 'Resell this pair',
-            recommendationReason:
-                'Due to high demand and exceptional condition, keeping this pair in circulation maximizes value.',
-            photos: [
-              ShoePhotoModel(id: '1', view: 'top', url: null),
-              ShoePhotoModel(id: '2', view: 'left', url: null),
-              ShoePhotoModel(id: '3', view: 'right', url: null),
-              ShoePhotoModel(id: '4', view: 'sole', url: null),
-            ],
+            id: existingCard.id,
+            brand: existingCard.brand,
+            model: existingCard.model,
+            color: existingCard.color,
+            shoeType: existingCard.shoeType,
+            conditionCode: existingCard.conditionCode,
+            conditionLabel: existingCard.conditionLabel,
+            conditionGrade: existingCard.conditionGrade,
+            resaleMin: existingCard.resaleMin,
+            resaleMax: existingCard.resaleMax,
+            recommendedAction: existingCard.recommendedAction,
+            photos: [],
           );
-          _isLoading = false;
-        });
+        } else {
+          _profile = null;
+        }
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -225,16 +221,22 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Center(
-                        child: Image.asset(
-                          AppAssets.shoeHome1,
-                          height: 64,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Icon(
-                            Icons.roller_skating,
-                            size: 44,
-                            color: Color(0xFF4338CA),
-                          ),
-                        ),
+                        child: (photos.isNotEmpty && photos.first.url != null)
+                            ? Image.network(
+                                photos.first.url!,
+                                height: 64,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.roller_skating,
+                                  size: 40,
+                                  color: Color(0xFF64748B),
+                                ),
+                              )
+                            : const Icon(
+                                Icons.roller_skating,
+                                size: 40,
+                                color: Color(0xFF64748B),
+                              ),
                       ),
                     ),
                   ),
@@ -732,9 +734,9 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                 ? Image.network(
                     url,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _buildAngleAssetFallback(label),
+                    errorBuilder: (_, __, ___) => _buildAnglePlaceholder(label),
                   )
-                : _buildAngleAssetFallback(label),
+                : _buildAnglePlaceholder(label),
           ),
           Positioned(
             bottom: 6,
@@ -762,30 +764,25 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
     );
   }
 
-  Widget _buildAngleAssetFallback(String label) {
-    String assetPath;
-    switch (label.toLowerCase()) {
-      case 'top':
-        assetPath = AppAssets.viewfinderTop;
-        break;
-      case 'left':
-        assetPath = AppAssets.viewfinderLeft;
-        break;
-      case 'right':
-        assetPath = AppAssets.viewfinderRight;
-        break;
-      case 'bottom':
-      default:
-        assetPath = AppAssets.viewfinderBottom;
-        break;
-    }
-
-    return Image.asset(
-      assetPath,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(
-        color: Colors.grey.shade200,
-        child: const Icon(Icons.photo_camera, color: Colors.grey),
+  Widget _buildAnglePlaceholder(String label) {
+    return Container(
+      color: const Color(0xFFF1F5F9),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.photo_camera_outlined, color: Color(0xFF94A3B8), size: 24),
+            const SizedBox(height: 4),
+            Text(
+              label.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF94A3B8),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

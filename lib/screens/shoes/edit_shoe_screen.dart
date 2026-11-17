@@ -81,12 +81,17 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
   @override
   void initState() {
     super.initState();
-    _modelController = TextEditingController(text: widget.shoe.model ?? 'Cloudmonster 2');
-    _colorController = TextEditingController(text: widget.shoe.color ?? 'Black');
+    _modelController = TextEditingController(text: widget.shoe.model ?? '');
+    _colorController = TextEditingController(text: widget.shoe.color ?? '');
 
-    _selectedBrand = widget.shoe.brand.toUpperCase();
-    if (!_commonBrands.contains(_selectedBrand)) {
-      _selectedBrand = 'ON RUNNING';
+    final shoeBrand = widget.shoe.brand.toUpperCase();
+    if (_commonBrands.contains(shoeBrand)) {
+      _selectedBrand = shoeBrand;
+    } else if (shoeBrand.isNotEmpty) {
+      _commonBrands.insert(0, shoeBrand);
+      _selectedBrand = shoeBrand;
+    } else {
+      _selectedBrand = _commonBrands.first;
     }
 
     _selectedCategory = widget.shoe.shoeType ?? 'Running';
@@ -488,13 +493,6 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
     final effectiveWidth = MediaQuery.of(context).size.width.clamp(0.0, 430.0);
     final size = (effectiveWidth - 64) / 3;
 
-    final fallbackAssets = [
-      AppAssets.viewfinderTop,
-      AppAssets.viewfinderLeft,
-      AppAssets.viewfinderRight,
-      AppAssets.viewfinderBottom,
-    ];
-
     return Container(
       width: size,
       height: size * 1.25,
@@ -511,16 +509,10 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
             Image.network(
               imageUrl,
               fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => Image.asset(
-                fallbackAssets[index % fallbackAssets.length],
-                fit: BoxFit.cover,
-              ),
+              errorBuilder: (_, _, _) => _buildPlaceholderPhoto(),
             )
           else
-            Image.asset(
-              fallbackAssets[index % fallbackAssets.length],
-              fit: BoxFit.cover,
-            ),
+            _buildPlaceholderPhoto(),
 
           // Main Tag (Figma Edit shoe details)
           if (isMain)
@@ -562,6 +554,19 @@ class _EditShoeScreenState extends State<EditShoeScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPlaceholderPhoto() {
+    return Container(
+      color: const Color(0xFFF1F5F9),
+      child: const Center(
+        child: Icon(
+          Icons.photo_camera_outlined,
+          size: 28,
+          color: Color(0xFF94A3B8),
+        ),
       ),
     );
   }

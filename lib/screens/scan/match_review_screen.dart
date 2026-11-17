@@ -70,78 +70,42 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
         return {
           'shoeId': m['shoeId']?.toString() ?? 'shoe_${DateTime.now().millisecondsSinceEpoch}',
           'label': m['label']?.toString() ?? 'Shoe 01',
-          'brand': res['brand']?.toString() ?? 'On Running',
-          'model': res['model']?.toString() ?? 'Cloudmonster 2',
+          'brand': res['brand']?.toString() ?? 'Identified Shoe',
+          'model': res['model']?.toString() ?? 'Sneaker',
           'category': res['category']?.toString() ?? 'Athletic Shoes',
           'subcategory': res['subcategory']?.toString() ?? 'Running Shoes',
           'condition': cond['label']?.toString() ?? 'Like New',
           'conditionCode': cond['code']?.toString() ?? 'C1',
-          'color': res['colorway']?.toString() ?? 'Black',
-          'size': res['size']?.toString() ?? 'US W-7',
-          'matchPercent': res['matchPercent'] as int? ?? 98,
+          'color': res['colorway']?.toString() ?? 'Original',
+          'size': res['size']?.toString() ?? 'US M-9',
+          'matchPercent': res['matchPercent'] as int? ?? 95,
           'photos': m['photos'] as List? ?? [],
         };
       }).toList();
     } else {
-      // Default fallback matching Figma System Process + Review Result screens
-      _shoes = [
-        {
-          'shoeId': 'shoe_1',
-          'label': 'Shoe 01',
-          'brand': 'On Running',
-          'model': 'Cloudmonster 2',
-          'category': 'Athletic Shoes',
-          'subcategory': 'Running Shoes',
-          'condition': 'Like New',
-          'conditionCode': 'C1',
-          'color': 'Black',
-          'size': 'US W-7',
-          'matchPercent': 98,
-          'photos': [],
-        },
-        {
-          'shoeId': 'shoe_2',
-          'label': 'Shoe 02',
-          'brand': 'Nike',
-          'model': 'Pegasus 40',
-          'category': 'Athletic Shoes',
-          'subcategory': 'Running Shoes',
-          'condition': 'Like New',
-          'conditionCode': 'C1',
-          'color': 'White',
-          'size': 'US M-10',
-          'matchPercent': 96,
-          'photos': [],
-        },
-        {
-          'shoeId': 'shoe_3',
-          'label': 'Shoe 03',
-          'brand': 'Adidas',
-          'model': 'Ultraboost 22',
-          'category': 'Athletic Shoes',
-          'subcategory': 'Running Shoes',
-          'condition': 'Lightly Worn',
-          'conditionCode': 'C2',
-          'color': 'Grey',
-          'size': 'US M-10.5',
-          'matchPercent': 94,
-          'photos': [],
-        },
-        {
-          'shoeId': 'shoe_4',
-          'label': 'Shoe 04',
-          'brand': 'New Balance',
-          'model': '990v5',
-          'category': 'Athletic Shoes',
-          'subcategory': 'Lifestyle',
-          'condition': 'Heavily Worn',
-          'conditionCode': 'C3',
-          'color': 'Grey/Castlerock',
-          'size': 'US M-9.5',
-          'matchPercent': 92,
-          'photos': [],
-        },
-      ];
+      final session = Provider.of<ScanProvider>(context, listen: false).session;
+      if (session != null && session.shoes.isNotEmpty) {
+        _shoes = session.shoes.asMap().entries.map((entry) {
+          final idx = entry.key;
+          final s = entry.value;
+          return {
+            'shoeId': s.id.isNotEmpty ? s.id : 'shoe_${idx + 1}',
+            'label': s.label.isNotEmpty ? s.label : 'Shoe 0${idx + 1}',
+            'brand': 'Identified Shoe',
+            'model': 'Sneaker',
+            'category': 'Athletic Shoes',
+            'subcategory': 'Running Shoes',
+            'condition': 'Like New',
+            'conditionCode': 'C1',
+            'color': 'Original',
+            'size': 'US M-9',
+            'matchPercent': 95,
+            'photos': s.photos.map((p) => {'view': p.view, 'url': p.url}).toList(),
+          };
+        }).toList();
+      } else {
+        _shoes = [];
+      }
     }
   }
 
@@ -190,13 +154,13 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
   }
 
   void _showFindMyShoeModal(Map<String, dynamic> shoeItem) {
-    String selectedBrand = shoeItem['brand'] as String? ?? 'On Running';
-    final modelCtrl = TextEditingController(text: shoeItem['model'] as String? ?? 'Cloudmonster 2');
+    String selectedBrand = shoeItem['brand'] as String? ?? (_availableBrands.isNotEmpty ? _availableBrands.first : 'Nike');
+    final modelCtrl = TextEditingController(text: shoeItem['model'] as String? ?? '');
     String selectedCategory = shoeItem['category'] as String? ?? 'Athletic Shoes';
     String selectedSubcategory = shoeItem['subcategory'] as String? ?? 'Running Shoes';
     String selectedCondition = shoeItem['condition'] as String? ?? 'Like New';
     String selectedColor = shoeItem['color'] as String? ?? 'Black';
-    String selectedSize = shoeItem['size'] as String? ?? 'US W-7';
+    String selectedSize = shoeItem['size'] as String? ?? 'US M-9';
 
     final categoryOptions = [
       'Athletic Shoes',
@@ -730,7 +694,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                             onPressed: () {
                               final updatedModel = modelCtrl.text.trim().isNotEmpty
                                   ? modelCtrl.text.trim()
-                                  : (shoeItem['model'] as String? ?? 'Cloudmonster 2');
+                                  : (shoeItem['model'] as String? ?? 'Sneaker');
 
                               shoeItem['brand'] = selectedBrand;
                               shoeItem['model'] = updatedModel;
@@ -1378,7 +1342,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
 
                   // Intro Text
                   Text(
-                    'We found matches for ${_shoes.length} pairs. Take a quick look at each one to make sure we got it right.',
+                    'We found matches for ${_shoes.length} ${_shoes.length == 1 ? "pair" : "pairs"}. Take a quick look ${_shoes.length == 1 ? "to make sure we got it right." : "at each one to make sure we got it right."}',
                     style: const TextStyle(
                       fontSize: 14,
                       color: Color(0xFF475569),

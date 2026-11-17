@@ -31,7 +31,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
   }
 
   String get _shareSlug {
-    final sanitized = (shoe.model ?? 'cloudmonster-2').toLowerCase().replaceAll(
+    final sanitized = (shoe.model ?? 'shoe').toLowerCase().replaceAll(
       RegExp(r'[^a-z0-9]+'),
       '-',
     );
@@ -154,7 +154,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            shoe.model ?? 'Cloudmonster 2',
+                            shoe.model ?? 'Footwear',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w900,
@@ -163,7 +163,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '${shoe.shoeType ?? "Athletic"} • ${(shoe.color != null && shoe.color!.isNotEmpty) ? shoe.color : "Black"}',
+                            '${shoe.shoeType ?? "Footwear"} • ${(shoe.color != null && shoe.color!.isNotEmpty) ? shoe.color : "Original"}',
                             style: const TextStyle(
                               fontSize: 12,
                               color: Color(0xFF64748B),
@@ -187,7 +187,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    'A · ${shoe.conditionBadgeText.isNotEmpty ? shoe.conditionBadgeText : "Lightly worn"}',
+                                    shoe.conditionBadgeText,
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w700,
@@ -208,7 +208,7 @@ class ShareShoeBottomSheet extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    shoe.resaleValueFormatted ?? '\$65–\$90',
+                                    shoe.resaleValueFormatted ?? 'Estimate pending',
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w800,
@@ -355,17 +355,11 @@ class ShareShoeBottomSheet extends StatelessWidget {
   }
 
   Widget _buildShoeImageFallback() {
-    return Center(
-      child: Image.asset(
-        AppAssets.shoeHome1,
-        width: 140,
-        height: 110,
-        fit: BoxFit.contain,
-        errorBuilder: (_, __, ___) => const Icon(
-          Icons.roller_skating,
-          size: 64,
-          color: Color(0xFF94A3B8),
-        ),
+    return const Center(
+      child: Icon(
+        Icons.roller_skating,
+        size: 56,
+        color: Color(0xFF94A3B8),
       ),
     );
   }
