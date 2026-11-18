@@ -1,8 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 class ApiEndpoints {
+  static const String _envBaseUrl = String.fromEnvironment('API_BASE_URL');
+
   // Default emulator and local device endpoints
   static String get baseUrl {
+    if (_envBaseUrl.isNotEmpty) {
+      return _envBaseUrl;
+    }
     if (kIsWeb) {
       return 'http://localhost:3000/api/v1';
     }
