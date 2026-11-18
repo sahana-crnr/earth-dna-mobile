@@ -3,21 +3,15 @@ import 'package:flutter/foundation.dart';
 class ApiEndpoints {
   static const String _envBaseUrl = String.fromEnvironment('API_BASE_URL');
 
-  // Default emulator and local device endpoints
+  // Live Render cloud backend
+  static const String liveCloudUrl = 'https://earth-dna-api.onrender.com/api/v1';
+
+  // Default endpoints point to the live cloud backend
   static String get baseUrl {
     if (_envBaseUrl.isNotEmpty) {
       return _envBaseUrl;
     }
-    if (kIsWeb) {
-      return 'http://localhost:3000/api/v1';
-    }
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      // 10.0.2.2 maps to host machine localhost in standard Android Emulator
-      return 'http://10.0.2.2:3000/api/v1';
-    } else {
-      // iOS Simulator & macOS/Desktop
-      return 'http://localhost:3000/api/v1';
-    }
+    return liveCloudUrl;
   }
 
   // Auth
