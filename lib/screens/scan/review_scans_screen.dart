@@ -82,7 +82,7 @@ class ReviewScansScreen extends StatelessWidget {
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
                             color: Color(0xFF0F172A),
-                            letterSpacing: -0.3,
+                            letterSpacing: 0.0,
                           ),
                         ),
                         const SizedBox(height: 6),

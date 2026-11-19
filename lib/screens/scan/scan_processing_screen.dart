@@ -162,7 +162,7 @@ class _ScanProcessingScreenState extends State<ScanProcessingScreen> {
                       color: Color(0xFF0F172A),
                       fontSize: 28,
                       fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
+                      letterSpacing: 0.0,
                     ),
                   ),
                   const SizedBox(height: 10),

@@ -36,7 +36,6 @@ class AppTheme {
           fontSize: 24,
           height: 1.25,
           fontWeight: FontWeight.w700,
-          letterSpacing: 0.32,
           color: AppColors.textLightPrimary,
         ),
         titleLarge: GoogleFonts.urbanist(
@@ -61,14 +60,12 @@ class AppTheme {
           fontSize: 16,
           height: 1.5,
           fontWeight: FontWeight.w500,
-          letterSpacing: 0.32,
           color: AppColors.textLightPrimary,
         ),
         bodyMedium: GoogleFonts.urbanist(
           fontSize: 14,
           height: 1.43,
           fontWeight: FontWeight.w500,
-          letterSpacing: 0.28,
           color: AppColors.textLightSecondary,
         ),
         bodySmall: GoogleFonts.spaceGrotesk(

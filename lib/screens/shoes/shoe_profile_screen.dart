@@ -189,7 +189,7 @@ class _ShoeProfileScreenState extends State<ShoeProfileScreen> {
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: -0.5,
+                            letterSpacing: 0.0,
                           ),
                         ),
                         const SizedBox(height: 4),

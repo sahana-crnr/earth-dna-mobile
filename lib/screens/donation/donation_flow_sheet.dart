@@ -156,7 +156,7 @@ class _DonationFlowSheetState extends State<DonationFlowSheet> {
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
                   color: const Color(0xFF0F172A),
-                  letterSpacing: -0.3,
+                  letterSpacing: 0.0,
                 ),
               ),
             ),

@@ -112,7 +112,7 @@ class AppStyles {
       textStyle: GoogleFonts.urbanist(
         fontSize: 15,
         fontWeight: FontWeight.w700,
-        letterSpacing: -0.2,
+        letterSpacing: 0.0,
       ),
     );
   }
@@ -137,7 +137,7 @@ class AppStyles {
       textStyle: GoogleFonts.urbanist(
         fontSize: 15,
         fontWeight: FontWeight.w700,
-        letterSpacing: -0.2,
+        letterSpacing: 0.0,
       ),
     );
   }
@@ -160,6 +160,7 @@ class AppStyles {
       textStyle: GoogleFonts.urbanist(
         fontSize: 15,
         fontWeight: FontWeight.w700,
+        letterSpacing: 0.0,
       ),
     );
   }
@@ -171,7 +172,7 @@ class AppStyles {
         fontSize: 26,
         fontWeight: FontWeight.w800,
         color: AppColors.textLightPrimary,
-        letterSpacing: -0.4,
+        letterSpacing: 0.0,
       );
 
   /// Section Header (H2)
@@ -179,7 +180,7 @@ class AppStyles {
         fontSize: 20,
         fontWeight: FontWeight.w700,
         color: AppColors.textLightPrimary,
-        letterSpacing: -0.2,
+        letterSpacing: 0.0,
       );
 
   /// Subtitle / Card Title (H3)

@@ -48,7 +48,42 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFAFAFA),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            'MY SHOES',
+            style: GoogleFonts.instrumentSans(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.0,
+              color: const Color(0xFF0F172A),
+            ),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton(
+              tooltip: 'Filter shoes',
+              icon: AppAssets.svg(
+                AppAssets.filter,
+                color: const Color(0xFF0F172A),
+                width: 22,
+                height: 22,
+              ),
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              onPressed: () => _showFilters(context),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
+        top: false,
         child: Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
@@ -60,39 +95,12 @@ class _MyShoesScreenState extends State<MyShoesScreen> {
                 padding: const EdgeInsets.only(
                   left: 20,
                   right: 20,
-                  top: 16,
+                  top: 8,
                   bottom: 110,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header: MY SHOES + Filter icon (Figma My Shoe)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'MY SHOES',
-                          style: GoogleFonts.instrumentSans(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.2,
-                            color: const Color(0xFF0F172A),
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: 'Filter shoes',
-                          icon: AppAssets.svg(
-                            AppAssets.filter,
-                            color: const Color(0xFF0F172A),
-                            width: 22,
-                            height: 22,
-                          ),
-                          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                          onPressed: () => _showFilters(context),
-                        ),
-                      ],
-                    ),
-
                     if (shoes.isNotEmpty) ...[
                       const SizedBox(height: 12),
 

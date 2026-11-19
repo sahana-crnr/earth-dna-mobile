@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_assets.dart';
@@ -72,7 +73,7 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
                             color: Color(0xFF0F172A),
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
-                            letterSpacing: -0.5,
+                            letterSpacing: 0.0,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -423,15 +424,26 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
-        title: Text(
-          'Marketplace',
-          style: Theme.of(context).textTheme.titleLarge,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            'Marketplace',
+            style: GoogleFonts.instrumentSans(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.0,
+              color: const Color(0xFF0F172A),
+            ),
+          ),
         ),
         backgroundColor: AppColors.backgroundLight,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.only(left: 32, right: 32, bottom: 90),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -442,18 +454,26 @@ class _MainNavScaffoldState extends State<MainNavScaffold> {
                   color: AppColors.primaryGreenLight,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.storefront_outlined, size: 32),
+                child: const Icon(Icons.storefront_outlined, size: 32, color: Color(0xFF1E392A)),
               ),
               const SizedBox(height: 20),
               Text(
                 'Marketplace',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: GoogleFonts.urbanist(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF0F172A),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Listings will appear here when they are available.',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF64748B),
+                ),
               ),
             ],
           ),

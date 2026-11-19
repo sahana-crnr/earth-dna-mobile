@@ -1043,7 +1043,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
                         color: Color(0xFF0F172A),
-                        letterSpacing: -0.3,
+                        letterSpacing: 0.0,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -1454,23 +1454,37 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFEEF2FF),
+                                    color: matchPercent != null
+                                        ? const Color(0xFFEEF2FF)
+                                        : const Color(0xFFF1F5F9),
                                     borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(color: const Color(0xFFC7D2FE)),
+                                    border: Border.all(
+                                      color: matchPercent != null
+                                          ? const Color(0xFFC7D2FE)
+                                          : const Color(0xFFE2E8F0),
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
-                                        Icons.auto_awesome,
+                                      Icon(
+                                        matchPercent != null
+                                            ? Icons.auto_awesome
+                                            : Icons.search,
                                         size: 13,
-                                        color: Color(0xFF4338CA),
+                                        color: matchPercent != null
+                                            ? const Color(0xFF4338CA)
+                                            : const Color(0xFF475569),
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        '$matchPercent% Match',
-                                        style: const TextStyle(
-                                          color: Color(0xFF4338CA),
+                                        matchPercent != null
+                                            ? '$matchPercent% Match'
+                                            : 'Catalog Match',
+                                        style: TextStyle(
+                                          color: matchPercent != null
+                                              ? const Color(0xFF4338CA)
+                                              : const Color(0xFF475569),
                                           fontSize: 11,
                                           fontWeight: FontWeight.w800,
                                         ),
@@ -1587,7 +1601,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                   children: [
                                     const Center(
                                       child: Text(
-                                        'This Shoe Was Added To My Shoes',
+                                        'Confirm Footwear Details',
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w800,
@@ -1598,7 +1612,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                                     const SizedBox(height: 4),
                                     const Center(
                                       child: Text(
-                                        'You can change this decision later from My Shoes.',
+                                        'Verify details below or choose your exact shoe model.',
                                         style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                                       ),
                                     ),
