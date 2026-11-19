@@ -243,17 +243,65 @@ class HomeDashboardScreen extends StatelessWidget {
                 Builder(
                   builder: (context) {
                     final liveItems = shoesProvider.marketplaceItems;
-                    final displayItems =
-                        liveItems.isNotEmpty ? liveItems : _marketplacePreviewItems;
+                    if (liveItems.isEmpty) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 24,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: const BoxDecoration(
+                                color: AppColors.primaryGreenLight,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.storefront_outlined,
+                                size: 24,
+                                color: Color(0xFF1E392A),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'No listings available yet',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF0F172A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Marketplace listings will appear here when available.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 13,
+                                color: const Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                     return SizedBox(
                       height: 235,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         clipBehavior: Clip.none,
-                        itemCount: displayItems.length,
+                        itemCount: liveItems.length,
                         separatorBuilder: (_, _) => const SizedBox(width: 14),
                         itemBuilder: (ctx, index) {
-                          final item = displayItems[index];
+                          final item = liveItems[index];
                           return _buildMarketplaceCard(context, item);
                         },
                       ),
@@ -1365,29 +1413,6 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 }
-
-const List<MarketplacePreviewItem> _marketplacePreviewItems = [
-  MarketplacePreviewItem(
-    title: 'On Running · Cloudmonster',
-    price: r'$35',
-    asset: AppAssets.shoeHome1,
-  ),
-  MarketplacePreviewItem(
-    title: 'Nike · Air Max 90 · White / Grey',
-    price: r'$25',
-    asset: AppAssets.shoeHome2,
-  ),
-  MarketplacePreviewItem(
-    title: 'Adidas Originals',
-    price: r'$40',
-    asset: AppAssets.shoeHome3,
-  ),
-  MarketplacePreviewItem(
-    title: 'Puma Suede Classic',
-    price: r'$30',
-    asset: AppAssets.shoeHome4,
-  ),
-];
 
 class _HomeStatusCard extends StatelessWidget {
   const _HomeStatusCard({
