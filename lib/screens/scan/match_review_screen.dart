@@ -128,7 +128,9 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
       _confirmedShoes[_activeShoeIndex] = true;
     });
 
-    final scanId = _data['scanId'] as String? ?? '';
+    final scanId = (_data['scanId'] as String?)?.isNotEmpty == true
+        ? _data['scanId'] as String
+        : (Provider.of<ScanProvider>(context, listen: false).session?.id ?? '');
     final shoeId = shoeItem['shoeId'] as String;
 
     try {
