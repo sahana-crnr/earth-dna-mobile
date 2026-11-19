@@ -43,6 +43,9 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   }
 
   Future<void> _initHardwareCamera() async {
+    if (mounted) {
+      setState(() => _isLoadingCamera = true);
+    }
     try {
       final cameras = await availableCameras();
       if (cameras.isNotEmpty) {
@@ -70,6 +73,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
     if (mounted) {
       setState(() {
         _isLoadingCamera = false;
+        _isCameraReady = false;
       });
     }
   }
@@ -1387,14 +1391,66 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                                   ),
                                 )
                               else
-                                Image.asset(
-                                  _getViewfinderAsset(activeView),
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) => Image.asset(
-                                    AppAssets.ftue3ViewfinderShoe,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, _, _) => Container(
-                                      color: const Color(0xFF1E242B),
+                                Container(
+                                  color: const Color(0xFF111827),
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 60,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.08),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.white70,
+                                            size: 30,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                        const Text(
+                                          'Camera inactive or permission needed',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 0.0,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        const Text(
+                                          'Tap Enable Camera to grant access, or tap the shutter below to take/upload a photo.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Color(0xFF94A3B8),
+                                            fontSize: 12,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                        ElevatedButton.icon(
+                                          onPressed: _initHardwareCamera,
+                                          icon: const Icon(Icons.videocam_outlined, size: 16),
+                                          label: const Text(
+                                            'Enable Camera',
+                                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: AppColors.buttonLime,
+                                            foregroundColor: Colors.black,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
