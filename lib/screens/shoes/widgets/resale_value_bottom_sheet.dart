@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/app_styles.dart';
+import '../../../widgets/bottom_sheet_drag_handle.dart';
 
 class ResaleValueBottomSheet extends StatelessWidget {
   const ResaleValueBottomSheet({super.key});
@@ -22,10 +24,7 @@ class ResaleValueBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
+      decoration: AppStyles.bottomSheetDecoration,
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       child: SafeArea(
         top: false,
@@ -35,17 +34,7 @@ class ResaleValueBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 44,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1D5DB),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
+              const BottomSheetDragHandle(padding: EdgeInsets.only(bottom: 16)),
 
               // Header with close button
               Row(

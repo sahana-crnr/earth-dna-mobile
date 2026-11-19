@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_styles.dart';
 import '../../../models/shoe_model.dart';
+import '../../../widgets/bottom_sheet_drag_handle.dart';
 import '../../scan/camera_capture_screen.dart';
 import '../edit_shoe_screen.dart';
 import 'remove_shoe_bottom_sheet.dart';
@@ -46,10 +48,7 @@ class ManageShoeBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
+      decoration: AppStyles.bottomSheetDecoration,
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       child: SafeArea(
         top: false,
@@ -59,17 +58,7 @@ class ManageShoeBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Center(
-              child: Container(
-                width: 44,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD1D5DB),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
+            const BottomSheetDragHandle(padding: EdgeInsets.only(bottom: 20)),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(

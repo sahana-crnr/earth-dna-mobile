@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_styles.dart';
 import '../../../providers/shoes_provider.dart';
+import '../../../widgets/bottom_sheet_drag_handle.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   const FilterBottomSheet({super.key});
@@ -57,10 +59,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       child: SizedBox(
         width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
         child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
+          decoration: AppStyles.bottomSheetDecoration,
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           child: SafeArea(
             top: false,
@@ -69,18 +68,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Handle bar
-                  Center(
-                    child: Container(
-                      width: 44,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD1D5DB),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
+                  const BottomSheetDragHandle(padding: EdgeInsets.only(bottom: 16)),
 
                   // Title and Reset Button (Figma My Shoe_Filter)
                   Row(

@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_styles.dart';
 import '../../core/services/catalog_service.dart';
 import '../../core/services/scan_service.dart';
 import '../../models/catalog_model.dart';
 import '../../providers/scan_provider.dart';
 import '../../providers/shoes_provider.dart';
+import '../../widgets/bottom_sheet_drag_handle.dart';
 import '../../widgets/condition_badge.dart';
 import '../navigation/main_nav_scaffold.dart';
 import 'camera_capture_screen.dart';
@@ -245,27 +247,13 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
                     right: 20,
                     bottom: MediaQuery.of(context).viewInsets.bottom + 24,
                   ),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-                  ),
+                  decoration: AppStyles.bottomSheetDecoration,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Drag Handle
-                        Center(
-                          child: Container(
-                            width: 44,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 14),
+                        const BottomSheetDragHandle(padding: EdgeInsets.only(bottom: 14)),
 
                         // Header Row: Title & Close
                         Row(
@@ -1023,23 +1011,12 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: Container(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-              ),
+              decoration: AppStyles.bottomSheetDecoration,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 44,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                    const BottomSheetDragHandle(padding: EdgeInsets.only(bottom: 24)),
 
                     // Big Circular Lime Green Checkmark
                     Container(
@@ -1083,11 +1060,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
 
                     // Shoes List
                     Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
-                      ),
+                      decoration: AppStyles.surfaceDecoration(borderRadius: 18),
                       child: Column(
                         children: List.generate(_shoes.length, (idx) {
                           final item = _shoes[idx];
