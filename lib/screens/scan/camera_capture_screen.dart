@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -1203,13 +1204,17 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           child: SizedBox(
             width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
             child: SafeArea(
+              top: false,
+              bottom: true,
               child: Column(
                 children: [
                   // Top Bar: ✕, Shoe 01 ⌵, Lightbulb, Flash
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 10.0,
+                    padding: EdgeInsets.only(
+                      left: 16.0,
+                      right: 16.0,
+                      top: math.max(MediaQuery.of(context).padding.top + 8.0, 24.0),
+                      bottom: 10.0,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1344,120 +1349,126 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
                   // Camera Viewfinder Canvas with floating instructions (Matches Figma screens)
                   Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      color: Colors.black,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.expand,
-                        children: [
-                          // 1. Live Camera Feed or Authentic Shoe Viewfinder Preview
-                          if (_isCameraReady &&
-                              _cameraController != null &&
-                              _cameraController!.value.isInitialized)
-                            FittedBox(
-                              fit: BoxFit.cover,
-                              child: SizedBox(
-                                width: _cameraController!
-                                        .value.previewSize?.height ??
-                                    1,
-                                height: _cameraController!
-                                        .value.previewSize?.width ??
-                                    1,
-                                child: CameraPreview(_cameraController!),
-                              ),
-                            )
-                          else if (_isLoadingCamera)
-                            const ColoredBox(
-                              color: Colors.black,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primaryGreen,
-                                  strokeWidth: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16.0),
+                        child: Container(
+                          width: double.infinity,
+                          color: const Color(0xFF1E242B),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            fit: StackFit.expand,
+                            children: [
+                              // 1. Live Camera Feed or Authentic Shoe Viewfinder Preview
+                              if (_isCameraReady &&
+                                  _cameraController != null &&
+                                  _cameraController!.value.isInitialized)
+                                FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: SizedBox(
+                                    width: _cameraController!
+                                            .value.previewSize?.height ??
+                                        1,
+                                    height: _cameraController!
+                                            .value.previewSize?.width ??
+                                        1,
+                                    child: CameraPreview(_cameraController!),
+                                  ),
+                                )
+                              else if (_isLoadingCamera)
+                                const ColoredBox(
+                                  color: Colors.black,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primaryGreen,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                )
+                              else
+                                Image.asset(
+                                  _getViewfinderAsset(activeView),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) => Image.asset(
+                                    AppAssets.ftue3ViewfinderShoe,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, _, _) => Container(
+                                      color: const Color(0xFF1E242B),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            )
-                          else
-                            Image.asset(
-                              _getViewfinderAsset(activeView),
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Image.asset(
-                                AppAssets.ftue3ViewfinderShoe,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, _, _) => Container(
-                                  color: const Color(0xFF1E242B),
-                                ),
-                              ),
-                            ),
 
-                          // 2. Floating Dynamic Instruction Banner (matches Figma screens 1-5)
-                          Positioned(
-                            top: 24,
-                            left: 20,
-                            right: 20,
-                            child: Center(
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xCC000000), // Semi-transparent black pill
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: confirmedView != null
-                                    ? Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            '${_formatViewBanner(confirmedView)} captured',
+                              // 2. Floating Dynamic Instruction Banner (matches Figma screens 1-5)
+                              Positioned(
+                                top: 20,
+                                left: 16,
+                                right: 16,
+                                child: Center(
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 250),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xCC000000), // Semi-transparent black pill
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: confirmedView != null
+                                        ? Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '${_formatViewBanner(confirmedView)} captured',
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700,
+                                                  letterSpacing: 0.0,
+                                                ),
+                                              ),
+                                              if (activeView != confirmedView) ...[
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  'Next: ${_formatViewTitle(activeView)}',
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ],
+                                          )
+                                        : Text(
+                                            _getInstructionText(activeView),
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 13,
-                                              fontWeight: FontWeight.w700,
+                                              fontWeight: FontWeight.w600,
                                               letterSpacing: 0.0,
                                             ),
                                           ),
-                                          if (activeView != confirmedView) ...[
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              'Next: ${_formatViewTitle(activeView)}',
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ],
-                                      )
-                                    : Text(
-                                        _getInstructionText(activeView),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 0.0,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
-
-                          if (scan.isUploading)
-                            Container(
-                              color: Colors.black54,
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primaryGreen,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+
+                              if (scan.isUploading)
+                                Container(
+                                  color: Colors.black54,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primaryGreen,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -1511,18 +1522,18 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                             ),
                             const SizedBox(width: 6),
                             _buildAngleSlot(
-                              'right',
-                              AppAssets.snapRight,
-                              activeView == 'right',
-                              shoe?.photoForView('right'),
-                              scan,
-                            ),
-                            const SizedBox(width: 6),
-                            _buildAngleSlot(
                               'left',
                               AppAssets.snapLeft,
                               activeView == 'left',
                               shoe?.photoForView('left'),
+                              scan,
+                            ),
+                            const SizedBox(width: 6),
+                            _buildAngleSlot(
+                              'right',
+                              AppAssets.snapRight,
+                              activeView == 'right',
+                              shoe?.photoForView('right'),
                               scan,
                             ),
                             const SizedBox(width: 6),
@@ -1666,26 +1677,42 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
     final hasRemote = photo?.url != null && photo!.url!.isNotEmpty;
     final isCaptured = localFile != null || hasRemote;
 
+    final borderColor = isActive
+        ? const Color(0xFFD2F544) // Figma lime/yellow dashed border for active
+        : const Color(0xFF475569); // Figma subtle dashed slate for inactive
+
     return GestureDetector(
       onTap: () => _selectView(key),
       behavior: HitTestBehavior.opaque,
-      child: Container(
+      child: SizedBox(
         width: 44,
         height: 44,
-        clipBehavior: Clip.antiAlias,
-        padding: isCaptured ? EdgeInsets.zero : const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: const Color(0xCC000000), // Overlay/dark from Figma
-          borderRadius: BorderRadius.circular(12), // Corner radius: 12
-          border: isActive
-              ? Border.all(color: AppColors.primaryGreen, width: 1.5)
-              : (isCaptured
-                    ? null
-                    : Border.all(color: Colors.white24, width: 1.0)),
-        ),
         child: Stack(
           alignment: Alignment.center,
           children: [
+            // Dark Container Fill
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E242B),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+
+            // Dashed Border (lime for active, slate for inactive)
+            if (!isCaptured)
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: DashedRRectPainter(
+                    color: borderColor,
+                    strokeWidth: isActive ? 1.5 : 1.0,
+                    radius: 12.0,
+                  ),
+                ),
+              ),
+
+            // Content: Captured Photo or Outline Illustration
             if (isCaptured)
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -1740,11 +1767,63 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
   Widget _buildAngleIllustration(String assetPath, bool isActive) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(6.0),
       child: Opacity(
         opacity: isActive ? 1.0 : 0.40,
         child: Image.asset(assetPath, fit: BoxFit.contain),
       ),
     );
   }
+}
+
+class DashedRRectPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double radius;
+  final double dashWidth;
+  final double dashSpace;
+
+  const DashedRRectPainter({
+    required this.color,
+    this.strokeWidth = 1.2,
+    this.radius = 12.0,
+    this.dashWidth = 4.0,
+    this.dashSpace = 3.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(
+          strokeWidth / 2,
+          strokeWidth / 2,
+          size.width - strokeWidth,
+          size.height - strokeWidth,
+        ),
+        Radius.circular(radius),
+      ));
+
+    final metrics = path.computeMetrics();
+    for (final metric in metrics) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        final double length = math.min(dashWidth, metric.length - distance);
+        final segment = metric.extractPath(distance, distance + length);
+        canvas.drawPath(segment, paint);
+        distance += dashWidth + dashSpace;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant DashedRRectPainter oldDelegate) =>
+      oldDelegate.color != color ||
+      oldDelegate.strokeWidth != strokeWidth ||
+      oldDelegate.radius != radius;
 }

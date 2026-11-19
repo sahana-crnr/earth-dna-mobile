@@ -9,7 +9,6 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_styles.dart';
 import '../../core/services/catalog_service.dart';
 import '../../core/services/scan_service.dart';
-import '../../models/catalog_model.dart';
 import '../../providers/scan_provider.dart';
 import '../../providers/shoes_provider.dart';
 import '../../widgets/bottom_sheet_drag_handle.dart';
@@ -78,7 +77,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
           'conditionCode': cond['code']?.toString() ?? 'C1',
           'color': res['colorway']?.toString() ?? 'Original',
           'size': res['size']?.toString() ?? 'US M-9',
-          'matchPercent': res['matchPercent'] as int? ?? 95,
+          'matchPercent': res['matchPercent'] as int?,
           'photos': m['photos'] as List? ?? [],
         };
       }).toList();
@@ -99,7 +98,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
             'conditionCode': 'C1',
             'color': 'Original',
             'size': 'US M-9',
-            'matchPercent': 95,
+            'matchPercent': null,
             'photos': s.photos.map((p) => {'view': p.view, 'url': p.url}).toList(),
           };
         }).toList();
@@ -1235,7 +1234,7 @@ class _MatchReviewScreenState extends State<MatchReviewScreen> {
     final currentShoe = _shoes[_activeShoeIndex.clamp(0, _shoes.length - 1)];
     final isConfirmed = _confirmedShoes[_activeShoeIndex] == true;
     final progressVal = (_activeShoeIndex + 1) / _shoes.length;
-    final matchPercent = currentShoe['matchPercent'] as int? ?? 98;
+    final int? matchPercent = currentShoe['matchPercent'] as int?;
     final scanProvider = Provider.of<ScanProvider>(context);
 
     return Scaffold(
