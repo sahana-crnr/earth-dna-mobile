@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -12,7 +11,6 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
-import '../../models/scan_session_model.dart';
 import '../../providers/scan_provider.dart';
 import '../../widgets/responsive_mobile_frame.dart';
 import 'album_upload_screen.dart';
@@ -1112,70 +1110,6 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         ),
       ],
     );
-  }
-
-  String _formatViewTitle(String view) {
-    switch (view.toLowerCase()) {
-      case 'top':
-        return 'Top View';
-      case 'right':
-        return 'Right View';
-      case 'left':
-        return 'Left View';
-      case 'sole':
-      case 'bottom':
-        return 'Bottom View';
-      default:
-        return '${view[0].toUpperCase()}${view.substring(1)} View';
-    }
-  }
-
-  String _formatViewBanner(String view) {
-    switch (view.toLowerCase()) {
-      case 'top':
-        return 'Top view';
-      case 'right':
-        return 'Right view';
-      case 'left':
-        return 'Left view';
-      case 'sole':
-      case 'bottom':
-        return 'Bottom view';
-      default:
-        return '${view[0].toUpperCase()}${view.substring(1)} view';
-    }
-  }
-
-  String _getInstructionText(String activeView) {
-    switch (activeView.toLowerCase()) {
-      case 'top':
-        return 'Place the shoe flat and capture it from above';
-      case 'right':
-        return 'Capture the Right side of the shoe.';
-      case 'left':
-        return 'Capture the Left side of the shoe.';
-      case 'sole':
-      case 'bottom':
-        return 'Capture the Bottom of the shoe.';
-      default:
-        return 'Capture the shoe.';
-    }
-  }
-
-  String _getViewfinderAsset(String view) {
-    switch (view.toLowerCase()) {
-      case 'top':
-        return AppAssets.viewfinderTop;
-      case 'right':
-        return AppAssets.viewfinderRight;
-      case 'left':
-        return AppAssets.viewfinderLeft;
-      case 'sole':
-      case 'bottom':
-        return AppAssets.viewfinderBottom;
-      default:
-        return AppAssets.viewfinderTop;
-    }
   }
 
   String _getAssetForView(String view) {
