@@ -1352,45 +1352,31 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
                   // Camera Viewfinder Canvas with floating instructions (Matches Figma screens)
                   Expanded(
-                    child: ClipRect(
-                      clipBehavior: Clip.hardEdge,
-                      child: Container(
-                        width: double.infinity,
-                        clipBehavior: Clip.hardEdge,
-                        color: const Color(0xFF1E242B),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          fit: StackFit.expand,
-                          clipBehavior: Clip.hardEdge,
-                          children: [
-                                // 1. Live Camera Feed or Authentic Shoe Viewfinder Preview
-                                if (_isCameraReady &&
-                                    _cameraController != null &&
-                                    _cameraController!.value.isInitialized)
-                                  FittedBox(
-                                    fit: BoxFit.cover,
-                                    child: SizedBox(
-                                      width: _cameraController!
-                                              .value.previewSize?.height ??
-                                          1,
-                                      height: _cameraController!
-                                              .value.previewSize?.width ??
-                                          1,
-                                      child: CameraPreview(_cameraController!),
-                                    ),
-                                  )
-                                else if (_isLoadingCamera)
-                                  const ColoredBox(
-                                    color: Colors.black,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.primaryGreen,
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                  )
-                                else
-                                  Container(
+                    child: Container(
+                      width: double.infinity,
+                      color: const Color(0xFF1E242B),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // 1. Live Camera Feed or Clean Camera Placeholder
+                          if (_isCameraReady &&
+                              _cameraController != null &&
+                              _cameraController!.value.isInitialized)
+                            Center(
+                              child: CameraPreview(_cameraController!),
+                            )
+                          else if (_isLoadingCamera)
+                            const ColoredBox(
+                              color: Colors.black,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primaryGreen,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            )
+                          else
+                            Container(
                                     color: const Color(0xFF111827),
                                     padding: const EdgeInsets.symmetric(horizontal: 24),
                                     child: Center(
@@ -1525,7 +1511,6 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                             ),
                           ),
                         ),
-                      ),
 
                   // Bottom Controls Dock: solid black surface (Figma Surface/Canvas)
                   Container(
