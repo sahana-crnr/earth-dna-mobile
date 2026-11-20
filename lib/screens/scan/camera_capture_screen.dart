@@ -1353,17 +1353,13 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
                   // Camera Viewfinder Canvas with floating instructions (Matches Figma screens)
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16.0),
-                        child: Container(
-                          width: double.infinity,
-                          color: const Color(0xFF1E242B),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            fit: StackFit.expand,
-                            children: [
+                    child: Container(
+                      width: double.infinity,
+                      color: const Color(0xFF1E242B),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.expand,
+                        children: [
                               // 1. Live Camera Feed or Authentic Shoe Viewfinder Preview
                               if (_isCameraReady &&
                                   _cameraController != null &&
@@ -1526,8 +1522,6 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
 
                   // Angle Selector Strip
                   Padding(
@@ -1823,10 +1817,12 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
   Widget _buildAngleIllustration(String assetPath, bool isActive) {
     return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: Opacity(
-        opacity: isActive ? 1.0 : 0.40,
-        child: Image.asset(assetPath, fit: BoxFit.contain),
+      padding: const EdgeInsets.all(7.0),
+      child: Image.asset(
+        assetPath,
+        fit: BoxFit.contain,
+        color: isActive ? Colors.white : const Color(0xFF94A3B8),
+        colorBlendMode: BlendMode.srcIn,
       ),
     );
   }
