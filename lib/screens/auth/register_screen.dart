@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
+import '../../widgets/responsive_mobile_frame.dart';
 import '../navigation/main_nav_scaffold.dart';
 import 'login_screen.dart';
 
@@ -68,10 +69,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
-        child: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
-            child: SingleChildScrollView(
+        child: ResponsiveMobileFrame(
+          child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               child: Form(
                 key: _formKey,
@@ -201,8 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     ),
-  ),
-);
+  );
 }
 }
 

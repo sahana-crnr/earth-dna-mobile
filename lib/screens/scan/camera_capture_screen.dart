@@ -14,9 +14,14 @@ import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/scan_session_model.dart';
 import '../../providers/scan_provider.dart';
+import '../../widgets/responsive_mobile_frame.dart';
 import 'album_upload_screen.dart';
 import 'review_scans_screen.dart';
 import 'scan_processing_screen.dart';
+import 'widgets/camera_angle_dock.dart';
+import 'widgets/camera_shutter_dock.dart';
+import 'widgets/camera_top_bar.dart';
+import 'widgets/camera_viewfinder_canvas.dart';
 
 class CameraCaptureScreen extends StatefulWidget {
   const CameraCaptureScreen({super.key});
@@ -1204,610 +1209,65 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
-            child: SafeArea(
-              top: true,
-              bottom: true,
-              child: Column(
-                children: [
-                  // Top Bar: ✕, Shoe 01 ⌵, Lightbulb, Flash
-                  Container(
-                    color: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: _showExitConfirmationModal,
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              minWidth: 44,
-                              minHeight: 44,
-                            ),
-                            alignment: Alignment.center,
-                            child: Container(
-                              width: 38,
-                              height: 38,
-                              decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ),
+        body: ResponsiveMobileFrame(
+          backgroundColor: Colors.black,
+          child: SafeArea(
+            top: true,
+            bottom: true,
+            child: Column(
+              children: [
+                // 1. Top Bar: ✕, Shoe 01 ⌵, Lightbulb, Flash
+                CameraTopBar(
+                  activeShoeIndex: scan.activeShoeIndex,
+                  isFlashOn: _isFlashOn,
+                  onClose: _showExitConfirmationModal,
+                  onSelectShoe: _showScannedCollectionsDropdown,
+                  onShowTips: _showSnapTipsModal,
+                  onToggleFlash: _toggleFlash,
+                ),
 
-                        // Shoe selector pill (Tappable - Page 32 Scanned Collections)
-                        GestureDetector(
-                          onTap: _showScannedCollectionsDropdown,
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              minWidth: 44,
-                              minHeight: 44,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white12,
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Shoe 0${scan.activeShoeIndex + 1}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.white70,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            GestureDetector(
-                              onTap: _showSnapTipsModal,
-                              behavior: HitTestBehavior.opaque,
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  minWidth: 44,
-                                  minHeight: 44,
-                                ),
-                                alignment: Alignment.center,
-                                child: Container(
-                                  width: 38,
-                                  height: 38,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white12,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.lightbulb_outline,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            GestureDetector(
-                              onTap: _toggleFlash,
-                              behavior: HitTestBehavior.opaque,
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  minWidth: 44,
-                                  minHeight: 44,
-                                ),
-                                alignment: Alignment.center,
-                                child: Container(
-                                  width: 38,
-                                  height: 38,
-                                  decoration: BoxDecoration(
-                                    color: _isFlashOn
-                                        ? Colors.white24
-                                        : Colors.white12,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    _isFlashOn
-                                        ? Icons.flash_on
-                                        : Icons.flash_off,
-                                    color: _isFlashOn
-                                        ? AppColors.buttonLime
-                                        : Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                // 2. Camera Viewfinder Canvas with live stream and instructions
+                Expanded(
+                  child: CameraViewfinderCanvas(
+                    isCameraReady: _isCameraReady,
+                    isLoadingCamera: _isLoadingCamera,
+                    cameraController: _cameraController,
+                    isUploading: scan.isUploading,
+                    activeView: activeView,
+                    confirmedView: confirmedView,
+                    onEnableCamera: _initHardwareCamera,
                   ),
+                ),
 
-                  // Camera Viewfinder Canvas with floating instructions (Matches Figma screens)
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      color: const Color(0xFF1E242B),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // 1. Live Camera Feed or Clean Camera Placeholder
-                          if (_isCameraReady &&
-                              _cameraController != null &&
-                              _cameraController!.value.isInitialized)
-                            Center(
-                              child: CameraPreview(_cameraController!),
-                            )
-                          else if (_isLoadingCamera)
-                            const ColoredBox(
-                              color: Colors.black,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primaryGreen,
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            )
-                          else
-                            Container(
-                                    color: const Color(0xFF111827),
-                                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            width: 60,
-                                            height: 60,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 0.08),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(
-                                              Icons.camera_alt_outlined,
-                                              color: Colors.white70,
-                                              size: 30,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 14),
-                                          const Text(
-                                            'Camera inactive or permission needed',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700,
-                                              letterSpacing: 0.0,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 6),
-                                          const Text(
-                                            'Tap Enable Camera to grant access, or tap the shutter below to take/upload a photo.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Color(0xFF94A3B8),
-                                              fontSize: 12,
-                                              height: 1.4,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 14),
-                                          ElevatedButton.icon(
-                                            onPressed: _initHardwareCamera,
-                                            icon: const Icon(Icons.videocam_outlined, size: 16),
-                                            label: const Text(
-                                              'Enable Camera',
-                                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: AppColors.buttonLime,
-                                              foregroundColor: Colors.black,
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                              ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                // 2. Floating Dynamic Instruction Banner (matches Figma screens 1-5)
-                                Positioned(
-                                  top: 20,
-                                  left: 16,
-                                  right: 16,
-                                  child: Center(
-                                    child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 250),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 10,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xCC000000), // Semi-transparent black pill
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: confirmedView != null
-                                          ? Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  '${_formatViewBanner(confirmedView)} captured',
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w700,
-                                                    letterSpacing: 0.0,
-                                                  ),
-                                                ),
-                                                if (activeView != confirmedView) ...[
-                                                  const SizedBox(height: 2),
-                                                  Text(
-                                                    'Next: ${_formatViewTitle(activeView)}',
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      color: Colors.white70,
-                                                      fontSize: 11,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ],
-                                            )
-                                          : Text(
-                                              _getInstructionText(activeView),
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                letterSpacing: 0.0,
-                                              ),
-                                            ),
-                                    ),
-                                  ),
-                                ),
-
-                                if (scan.isUploading)
-                                  Container(
-                                    color: Colors.black54,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.primaryGreen,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                  // Bottom Controls Dock: solid black surface (Figma Surface/Canvas)
-                  Container(
-                    color: Colors.black,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Angle Selector Strip
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      _formatViewTitle(activeView),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 14,
-                                        letterSpacing: 0.0,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      '$capturedCount/4',
-                                      style: const TextStyle(
-                                        color: Colors.white54,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _buildAngleSlot(
-                                    'top',
-                                    AppAssets.snapTop,
-                                    activeView == 'top',
-                                    shoe?.photoForView('top'),
-                                    scan,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  _buildAngleSlot(
-                                    'left',
-                                    AppAssets.snapLeft,
-                                    activeView == 'left',
-                                    shoe?.photoForView('left'),
-                                    scan,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  _buildAngleSlot(
-                                    'right',
-                                    AppAssets.snapRight,
-                                    activeView == 'right',
-                                    shoe?.photoForView('right'),
-                                    scan,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  _buildAngleSlot(
-                                    'sole',
-                                    AppAssets.snapBottom,
-                                    activeView == 'sole',
-                                    shoe?.photoForView('sole'),
-                                    scan,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Shutter Controls Row
-                        Builder(
-                          builder: (context) {
-                            final bool isCurrentViewCaptured =
-                                scan.isViewCaptured(scan.activeShoeIndex, activeView);
-
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24.0,
-                                vertical: 16.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Gallery Button -> opens "Upload Photos For Up To 3 Pairs" modal
-                                  GestureDetector(
-                                    onTap: _showUploadFromAlbumModal,
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white12,
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: const Icon(
-                                        Icons.photo_library_outlined,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
-                                  ),
-
-                                  // Main Shutter Button
-                                  GestureDetector(
-                                    onTap: scan.isUploading ? null : _takePhoto,
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Container(
-                                      width: 78,
-                                      height: 78,
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white,
-                                      ),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: Colors.black,
-                                            width: 2,
-                                          ),
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  // Retake / Done button (Matches Figma: Retake when angle captured, Done when complete)
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (isCurrentViewCaptured) {
-                                        _takePhoto();
-                                      } else if (capturedCount >= 4) {
-                                        _showShoeCompleteModal();
-                                      } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Please capture all 4 views first ($capturedCount/4 captured)',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            duration: const Duration(seconds: 2),
-                                            behavior: SnackBarBehavior.floating,
-                                            backgroundColor: const Color(0xFF334155),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Container(
-                                      constraints: const BoxConstraints(
-                                        minWidth: 50,
-                                        minHeight: 50,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        isCurrentViewCaptured ? 'Retake' : 'Done',
-                                        style: TextStyle(
-                                          color: isCurrentViewCaptured
-                                              ? AppColors.buttonLime
-                                              : (capturedCount >= 4
-                                                  ? AppColors.primaryGreen
-                                                  : Colors.white24),
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                // 3. Bottom Controls Dock: solid black surface (Surface/Canvas)
+                Container(
+                  color: Colors.black,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CameraAngleDock(
+                        activeView: activeView,
+                        capturedCount: capturedCount,
+                        scan: scan,
+                        shoe: shoe,
+                        onSelectView: _selectView,
+                        onRemoveViewPhoto: _removeViewPhoto,
+                      ),
+                      CameraShutterDock(
+                        isUploading: scan.isUploading,
+                        isCurrentViewCaptured:
+                            scan.isViewCaptured(scan.activeShoeIndex, activeView),
+                        capturedCount: capturedCount,
+                        onOpenGallery: _showUploadFromAlbumModal,
+                        onTakePhoto: _takePhoto,
+                        onCompleteShoe: _showShoeCompleteModal,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAngleSlot(
-    String key,
-    String assetPath,
-    bool isActive,
-    ScanPhoto? photo,
-    ScanProvider scan,
-  ) {
-    final localFile = scan.getLocalPhoto(scan.activeShoeIndex, key);
-    final hasRemote = photo?.url != null && photo!.url!.isNotEmpty;
-    final isCaptured = localFile != null || hasRemote;
-
-    final borderColor = isActive
-        ? const Color(0xFFD2F544) // Figma lime/yellow dashed border for active
-        : const Color(0xFF475569); // Figma subtle dashed slate for inactive
-
-    return GestureDetector(
-      onTap: () => _selectView(key),
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Dark Container Fill
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E242B),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-
-            // Dashed Border (lime for active, slate for inactive)
-            if (!isCaptured)
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: DashedRRectPainter(
-                    color: borderColor,
-                    strokeWidth: isActive ? 1.5 : 1.0,
-                    radius: 10.0,
-                  ),
-                ),
-              ),
-
-            // Content: Captured Photo or Outline Illustration
-            if (isCaptured)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: localFile != null
-                      ? (kIsWeb
-                            ? Image.network(localFile.path, fit: BoxFit.cover)
-                            : Image.file(
-                                io.File(localFile.path),
-                                fit: BoxFit.cover,
-                              ))
-                      : Image.network(
-                          photo!.url!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) =>
-                              _buildAngleIllustration(assetPath, isActive),
-                        ),
-                ),
-              )
-            else
-              _buildAngleIllustration(assetPath, isActive),
-
-            // Figma '×' retake badge on captured slot
-            if (isCaptured)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: () => _removeViewPhoto(key),
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E242B),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white38, width: 0.8),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.close, size: 10, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-          ],
         ),
       ),
     );
@@ -1824,56 +1284,4 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
       ),
     );
   }
-}
-
-class DashedRRectPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double radius;
-  final double dashWidth;
-  final double dashSpace;
-
-  const DashedRRectPainter({
-    required this.color,
-    this.strokeWidth = 1.2,
-    this.radius = 12.0,
-    this.dashWidth = 4.0,
-    this.dashSpace = 3.0,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          strokeWidth / 2,
-          strokeWidth / 2,
-          size.width - strokeWidth,
-          size.height - strokeWidth,
-        ),
-        Radius.circular(radius),
-      ));
-
-    final metrics = path.computeMetrics();
-    for (final metric in metrics) {
-      double distance = 0.0;
-      while (distance < metric.length) {
-        final double length = math.min(dashWidth, metric.length - distance);
-        final segment = metric.extractPath(distance, distance + length);
-        canvas.drawPath(segment, paint);
-        distance += dashWidth + dashSpace;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant DashedRRectPainter oldDelegate) =>
-      oldDelegate.color != color ||
-      oldDelegate.strokeWidth != strokeWidth ||
-      oldDelegate.radius != radius;
 }

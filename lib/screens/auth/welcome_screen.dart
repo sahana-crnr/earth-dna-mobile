@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../widgets/earth_video_hero.dart';
+import '../../widgets/responsive_mobile_frame.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -45,10 +46,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width.clamp(0.0, 430.0),
-            child: Column(
+        child: ResponsiveMobileFrame(
+          child: Column(
               children: [
                 // Top page view content
                 Expanded(
@@ -225,9 +224,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     ),
-  ),
-);
-  }
+  );
+}
 
   String _getButtonText() {
     switch (_currentPage) {
